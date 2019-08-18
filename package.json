@@ -1,0 +1,23 @@
+{
+  "name": "cork",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "env-cmd -f ./config/dev.env nodemon src/index.js",
+    "start": "node src/index.js",
+    "heroku-postbuild": "cd client && npm install && npm run build"
+  },
+  "author": "Neil Berg",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongodb": "^3.3.0",
+    "mongoose": "^5.6.9"
+  },
+  "devDependencies": {
+    "env-cmd": "^9.0.3",
+    "nodemon": "^1.19.1"
+  }
+}
