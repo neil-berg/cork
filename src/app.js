@@ -8,12 +8,12 @@ const app = express();
 app.use(express.json());
 app.use(userRouter);
 
-// Serve static files from the React app in cork/clien/build
-app.use(express.static(path.join(__dirname, '../client/build')));
+// Serve static files from the React app in task-manager/client/build
+app.use(express.static(path.join(__dirname, '/../client/build')));
 
-// Catchall return index.html page
+// Catchall return React index page for not found pages
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/build.index.html'));
+  res.sendFile(path.join(__dirname, '/../client/build/index.html'));
 });
 
 module.exports = app;
