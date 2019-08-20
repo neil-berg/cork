@@ -1,9 +1,16 @@
 const express = require('express');
-const User = require('../models/user');
+const sharp = require('sharp');
 
+const User = require('../models/user');
 const auth = require('../middleware/auth');
+const upload = require('../middleware/upload');
 
 const router = new express.Router();
+
+// TEST
+router.get('/api/test', (req, res) => {
+  res.send({ message: 'from express' });
+});
 
 // POST /api/users
 //
@@ -34,6 +41,28 @@ router.post('/api/users/login', async (req, res) => {
     res.status(400).send();
   }
 });
+
+// POST /api/users/me/avatar
+//
+// Upload user avatar
+router.post(
+  '/api/users/me/avatar',
+  auth,
+  upload.single('avatar'),
+  async (req, res) => {
+    const buffer = await sharp(req.file.buffer)
+      .resize({ width: 200, height: 200 })
+      .jpeg()
+      .toBuffer();
+
+    req.user.avatar = buffer;
+    await req.user.save();
+    res.send();
+  },
+  (error, req, res, next) => {
+    res.status(400).send({ error: error.message });
+  }
+);
 
 // POST /api/users/logout
 //
@@ -67,9 +96,55 @@ router.post('/api/users/logoutAll', auth, async (req, res) => {
 
 // GET /api/users/me
 //
-// Read information about logged in user
+// Read information of authenticated user
 router.get('/api/users/me', auth, async (req, res) => {
   res.send(req.user);
+});
+
+// GET /api/users/:id/avatar
+//
+// Get user avatar
+router.get('/api/users/:id/avatar', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    console.log(user);
+    if (!user || !user.avatar) {
+      throw new Error();
+    }
+    res.set('Content-Type', 'image/jpeg');
+    res.send(user.avatar);
+  } catch (error) {
+    res.status(404).send();
+  }
+});
+
+// PATCH /api/users/me
+//
+// Update information for authenticated user
+router.patch('/api/users/me', auth, async (req, res) => {
+  const propertiesToUpdate = Object.keys(req.body);
+  // Todo: front end validation/sanitizing for valid update properties
+  try {
+    propertiesToUpdate.forEach(property => {
+      req.user[property] = req.body[property];
+    });
+    await req.user.save();
+    res.send(req.user);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+});
+
+// DELETE /api/users/me
+//
+// Remove user
+router.delete('/api/users/me', auth, async (req, res) => {
+  try {
+    await req.user.remove();
+    res.send(req.user);
+  } catch (error) {
+    res.status(401).send();
+  }
 });
 
 module.exports = router;
