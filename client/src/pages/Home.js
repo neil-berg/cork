@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import axios from 'axios';
 
+import UserContext from '../context/UserContext';
 import Layout from '../components/Layout';
 
 const Home = () => {
@@ -11,8 +12,12 @@ const Home = () => {
     // setPasswords(Object.keys(res.data));
   };
 
+  const [name, setName] = useContext(UserContext);
+
   return (
     <Layout>
+      <h1>{name}</h1>
+      <button onClick={() => setName('Neil')}>Change Name</button>
       <h2>Indepage</h2>
       <button onClick={handleClick}>TEST</button>
     </Layout>
