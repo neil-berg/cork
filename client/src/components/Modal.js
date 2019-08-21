@@ -1,9 +1,20 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
 import { animated, useTransition } from 'react-spring';
 import axios from 'axios';
 
+import UserContext from '../context/UserContext';
+
 const Modal = ({ showModal, setShowModal }) => {
+  // Local UI state and form values
+  const [showLogin, setShowLogin] = useState(true);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const [user, setUser] = useContext(UserContext);
+
+  // Animation transitions for backdrop, modal card, and form card
   const backdropTransition = useTransition(showModal, null, {
     from: { opacity: 0 },
     enter: { opacity: 1 },
@@ -16,11 +27,7 @@ const Modal = ({ showModal, setShowModal }) => {
     leave: { opacity: 0, transform: `translateY(-100px)` }
   });
 
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const handleSubmit = async e => {
+  const createUser = async e => {
     e.preventDefault();
     // Create a new user
     try {
@@ -34,13 +41,48 @@ const Modal = ({ showModal, setShowModal }) => {
       // for further auth calls and then close modal
       localStorage.setItem('cork-JWT', res.data.token);
       setShowModal(false);
+
+      // Store the created user in app-level context
+      setUser({ name, loggedIn: true });
+
+      // TODO: Reset the form
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const loginUser = async e => {
+    e.preventDefault();
+
+    try {
+      const token = localStorage.getItem('cork-JWT');
+      const res = await axios.post(
+        '/api/users/login',
+        {
+          email,
+          password
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+
+      // Update JWT and time of token creation in local storage
+      localStorage.removeItem('cork-JWT');
+      localStorage.setItem('cork-JWT', res.data.token);
+      setShowModal(false);
+      console.log(res.data);
+      // Store the created user in app-level context
+      // setUser({ res.data.user.name, loggedIn: true });
     } catch (error) {
       console.log(error);
     }
   };
 
   return (
-    <Container>
+    <Container name={name} email={email} password={password}>
       {backdropTransition.map(({ item, key, props: animation }) => {
         return (
           item && (
@@ -61,46 +103,103 @@ const Modal = ({ showModal, setShowModal }) => {
                   item && (
                     <animated.div className="card" key={key} style={animation}>
                       <div className="card__info">
-                        <p>Register for an account</p>
-                        <form onSubmit={e => handleSubmit(e)}>
-                          <label>
-                            <input
-                              type="text"
-                              autoComplete="on"
-                              required
-                              pattern="^[a-zA-Z'\s]{3,}"
-                              title="Must contain only letters, spaces, or apostrophes and be at least 3 characters long."
-                              value={name}
-                              onChange={e => setName(e.target.value)}
-                            />
-                            <span>Name</span>
-                          </label>
-                          <label>
-                            <input
-                              type="email"
-                              autoComplete="on"
-                              value={email}
-                              required
-                              onChange={e => setEmail(e.target.value)}
-                            />
-                            <span>Email</span>
-                          </label>
-                          <label>
-                            <input
-                              type="password"
-                              pattern="(?=.*\d)(?=.*[~`!@#$%^*()+=_-{}\|:;”’?/<>,.]).{8,}"
-                              title="Must be at least 8 characters long and contain at least one number and one special characer (~`!@#$%^*()+=_-{}[]\|:;”’?/<>,.)"
-                              autoComplete="off"
-                              required
-                              value={password}
-                              onChange={e => setPassword(e.target.value)}
-                            />
-                            <span>Password</span>
-                          </label>
-                          <button type="submit">Sign Up</button>
-                        </form>
-                        <p>Have an account?</p>
-                        <button>Log In</button>
+                        {showLogin && (
+                          <div className="login-container">
+                            <p>Log in to your account</p>
+                            <form>
+                              <label>
+                                <input
+                                  className="email-input"
+                                  type="email"
+                                  autoComplete="on"
+                                  value={email}
+                                  required
+                                  onChange={e => setEmail(e.target.value)}
+                                />
+                                <span className="placeholder">Email</span>
+                              </label>
+                              <label>
+                                <input
+                                  className="password-input"
+                                  type="password"
+                                  pattern="(?=.*\d)(?=.*[~`!@#$%^*()+=_-{}\|:;”’?/<>,.]).{8,}"
+                                  title="Must be at least 8 characters long and contain at least one number and one special characer (~`!@#$%^*()+=_-{}[]\|:;”’?/<>,.)"
+                                  autoComplete="off"
+                                  required
+                                  value={password}
+                                  onChange={e => setPassword(e.target.value)}
+                                />
+                                <span className="placeholder">Password</span>
+                              </label>
+                              <button
+                                type="submit"
+                                onClick={e => {
+                                  loginUser(e);
+                                }}
+                              >
+                                Log in
+                              </button>
+                            </form>
+                            <p>Don't have an account?</p>
+                            <button onClick={() => setShowLogin(false)}>
+                              Register
+                            </button>
+                          </div>
+                        )}
+                        {!showLogin && (
+                          <div className="register-container">
+                            <p>Register for an account</p>
+                            <form>
+                              <label>
+                                <input
+                                  className="name-input"
+                                  type="text"
+                                  autoComplete="on"
+                                  required
+                                  pattern="^[a-zA-Z'\s]{3,}"
+                                  title="Must contain only letters, spaces, or apostrophes and be at least 3 characters long."
+                                  value={name}
+                                  onChange={e => setName(e.target.value)}
+                                />
+                                <span className="placeholder">Name</span>
+                              </label>
+                              <label>
+                                <input
+                                  className="email-input"
+                                  type="email"
+                                  autoComplete="on"
+                                  value={email}
+                                  required
+                                  onChange={e => setEmail(e.target.value)}
+                                />
+                                <span className="placeholder">Email</span>
+                              </label>
+                              <label>
+                                <input
+                                  className="password-input"
+                                  type="password"
+                                  pattern="(?=.*\d)(?=.*[~`!@#$%^*()+=_-{}\|:;”’?/<>,.]).{8,}"
+                                  title="Must be at least 8 characters long and contain at least one number and one special characer (~`!@#$%^*()+=_-{}[]\|:;”’?/<>,.)"
+                                  autoComplete="off"
+                                  required
+                                  value={password}
+                                  onChange={e => setPassword(e.target.value)}
+                                />
+                                <span className="placeholder">Password</span>
+                              </label>
+                              <button
+                                type="submit"
+                                onClick={e => createUser(e)}
+                              >
+                                Sign Up
+                              </button>
+                            </form>
+                            <p>Have an account?</p>
+                            <button onClick={() => setShowLogin(true)}>
+                              Log In
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </animated.div>
                   )
@@ -161,20 +260,36 @@ const Container = styled.div`
     outline: 0;
   }
 
-  span {
-    transition: all ease 0.2s;
+  .placeholder {
+    transition: all ease 0.3s;
   }
 
-  input + span {
+  input + .placeholder {
     position: absolute;
     top: 0;
     left: 0;
     transform: translateY(50%);
   }
 
-  input:focus + span {
+  input:focus + .placeholder {
     transform: translateY(-50%);
     font-size: 0.8em;
+  }
+
+  .name-input:not(focus) + .placeholder {
+    transform: ${props => (props.name.length > 0 ? `translateY(-50%)` : '')};
+    font-size: ${props => (props.name.length > 0 ? '0.8em' : '')};
+  }
+
+  .email-input:not(focus) + .placeholder {
+    transform: ${props => (props.email.length > 0 ? `translateY(-50%)` : '')};
+    font-size: ${props => (props.email.length > 0 ? '0.8em' : '')};
+  }
+
+  .password-input:not(focus) + .placeholder {
+    transform: ${props =>
+      props.password.length > 0 ? `translateY(-50%)` : ''};
+    font-size: ${props => (props.password.length > 0 ? '0.8em' : '')};
   }
 
   input:valid {
