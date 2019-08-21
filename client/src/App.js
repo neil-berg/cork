@@ -6,11 +6,11 @@ import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 
 const App = () => {
-  const [name, setName] = useState('');
+  const [user, setUser] = useState({});
 
   return (
     <div>
-      <UserContext.Provider value={[name, setName]}>
+      <UserContext.Provider value={[user, setUser]}>
         <Switch>
           <Route exact path="/" component={Home} />
           <Route component={NotFound} />

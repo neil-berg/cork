@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
 import { animated, useTransition } from 'react-spring';
 import axios from 'axios';
@@ -22,8 +22,7 @@ const Modal = ({ showModal, setShowModal }) => {
 
   const handleSubmit = async e => {
     e.preventDefault();
-    // Potentially validate email address again?
-    // Send the POST request to create new user
+    // Create a new user
     try {
       const res = await axios.post('/api/users', {
         name,
@@ -31,7 +30,8 @@ const Modal = ({ showModal, setShowModal }) => {
         password
       });
 
-      // Store JWT in localstorage for further auth calls and close modal
+      // Store JWT and time of token creation in localstorage
+      // for further auth calls and then close modal
       localStorage.setItem('cork-JWT', res.data.token);
       setShowModal(false);
     } catch (error) {
@@ -61,25 +61,29 @@ const Modal = ({ showModal, setShowModal }) => {
                   item && (
                     <animated.div className="card" key={key} style={animation}>
                       <div className="card__info">
-                        <p>Log in to your account</p>
+                        <p>Register for an account</p>
                         <form onSubmit={e => handleSubmit(e)}>
                           <label>
                             <input
                               type="text"
                               autoComplete="on"
                               required
+                              pattern="^[a-zA-Z'\s]{3,}"
+                              title="Must contain only letters, spaces, or apostrophes and be at least 3 characters long."
                               value={name}
                               onChange={e => setName(e.target.value)}
                             />
+                            <span>Name</span>
                           </label>
                           <label>
                             <input
                               type="email"
                               autoComplete="on"
-                              required
                               value={email}
+                              required
                               onChange={e => setEmail(e.target.value)}
                             />
+                            <span>Email</span>
                           </label>
                           <label>
                             <input
@@ -91,11 +95,12 @@ const Modal = ({ showModal, setShowModal }) => {
                               value={password}
                               onChange={e => setPassword(e.target.value)}
                             />
+                            <span>Password</span>
                           </label>
                           <button type="submit">Sign Up</button>
                         </form>
-                        {/* <p>Don't have an account?</p>
-                        <button>REGISTER</button> */}
+                        <p>Have an account?</p>
+                        <button>Log In</button>
                       </div>
                     </animated.div>
                   )
@@ -126,7 +131,6 @@ const Container = styled.div`
     position: relative;
     border-radius: 10px;
     padding: 15px;
-    height: 200px;
     min-width: 320px;
     background-color: white;
   }
@@ -139,12 +143,42 @@ const Container = styled.div`
     justify-content: center;
   }
 
-  // input:invalid {
-  //   border-bottom: 2px red solid;
-  // }
+  label {
+    position: relative;
+  }
+
+  input {
+    padding: 0.5rem 0.5rem 0.5rem 0;
+    margin-bottom: 1rem;
+    width: 250px;
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    border-bottom: 2px grey solid;
+  }
+
+  input:focus {
+    outline: 0;
+  }
+
+  span {
+    transition: all ease 0.2s;
+  }
+
+  input + span {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translateY(50%);
+  }
+
+  input:focus + span {
+    transform: translateY(-50%);
+    font-size: 0.8em;
+  }
 
   input:valid {
-    border-bottom: 2px green solid;
+    border-bottom: 2px solid green;
   }
 `;
 

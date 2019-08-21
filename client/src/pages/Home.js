@@ -12,12 +12,14 @@ const Home = () => {
     // setPasswords(Object.keys(res.data));
   };
 
-  const [name, setName] = useContext(UserContext);
+  const [user, setUser] = useContext(UserContext);
 
   return (
     <Layout>
-      <h1>{name}</h1>
-      <button onClick={() => setName('Neil')}>Change Name</button>
+      <h1>{user.name}</h1>
+      <button onClick={() => setUser({ name: 'Neil', loggedIn: true })}>
+        Teest SetUser
+      </button>
       <h2>Indepage</h2>
       <button onClick={handleClick}>TEST</button>
     </Layout>
