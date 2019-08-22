@@ -25,6 +25,11 @@ const HeaderContainer = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(90deg, papayawhip, tomato, papayawhip);
+  background: linear-gradient(
+    90deg,
+    var(--purple),
+    var(--maroon),
+    var(--purple)
+  );
 `;
 export default Header;
