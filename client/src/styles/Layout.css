@@ -5,9 +5,12 @@ Additions according to https://zellwk.com/blog/css-reset/ and personal preferenc
 /* CSS variables */
 :root {
   --purple: rgb(76, 54, 138);
+  --lightpurple: rgb(215, 198, 235);
   --maroon: rgb(138, 54, 92);
   --green: rgb(16, 201, 149);
-  --white: rgb(250, 250, 250);
+  --red: rgb(247, 20, 103);
+  --blue: rgb(46, 89, 243);
+  --white: rgb(248, 247, 250);
 }
 
 /* Document

@@ -54,7 +54,7 @@ const Modal = ({ showModal, setShowModal }) => {
       setEmail('');
       setPassword('');
     } catch (error) {
-      setErrorMessage('Something went wrong. Try again.');
+      setErrorMessage('This email or username has already been taken!');
       // Clear the error message after 5 seconds
       setTimeout(() => {
         setErrorMessage('');
@@ -107,6 +107,7 @@ const Modal = ({ showModal, setShowModal }) => {
       username={username}
       email={email}
       password={password}
+      errorMessage={errorMessage}
     >
       {backdropTransition.map(({ item, key, props: animation }) => {
         return (
@@ -205,8 +206,8 @@ const Modal = ({ showModal, setShowModal }) => {
                                   type="text"
                                   autoComplete="on"
                                   required
-                                  pattern="[a-zA-Z0-9]{3,}"
-                                  title="Must contain only letters and numbers and be at least 3 characters long."
+                                  pattern="[a-zA-Z0-9]{3,15}"
+                                  title="Must contain only letters and numbers and be 3-15 characters long."
                                   value={username}
                                   onChange={e => setUsername(e.target.value)}
                                 />
@@ -236,6 +237,9 @@ const Modal = ({ showModal, setShowModal }) => {
                                 />
                                 <span className="placeholder">Password</span>
                               </label>
+                              {errorMessage && (
+                                <p className="error-message">{errorMessage}</p>
+                              )}
                               <button className="submit-button" type="submit">
                                 Sign Up
                               </button>
@@ -279,13 +283,14 @@ const Container = styled.div`
   }
   & .card {
     position: relative;
-    border-radius: 10px;
-    border: 3px var(--purple) solid;
-    box-shadow: 2px 10px 10px rgba(138, 54, 92, 0.35);
-    padding: 15px;
+    border-radius: 20px;
+    border: 1px var(--lightpurple) solid;
+    box-shadow: 0px 10px 20px rgba(76, 54, 138, 0.35);
+    padding: 1.2rem;
     width: 320px;
-    height: 425px;
+    height: ${props => (props.errorMessage ? '461px' : '425px')};
     background: var(--white) l;
+    transition: height ease 0.2s;
   }
 
   .card__info,
@@ -300,11 +305,13 @@ const Container = styled.div`
 
   .lower-container {
     margin-top: 1.25rem;
+    color: var(--purple);
   }
 
   .header-text {
     font-size: 1.2em;
     padding-bottom: 1em;
+    color: var(--purple);
   }
 
   label {
@@ -318,8 +325,9 @@ const Container = styled.div`
     border-top: none;
     border-right: none;
     border-left: none;
-    border-bottom: 2px grey solid;
+    border-bottom: 2px var(--purple) solid;
     background: var(--white);
+    color: var(--purple);
   }
 
   input:focus {
@@ -327,6 +335,7 @@ const Container = styled.div`
   }
 
   .placeholder {
+    color: var(--maroon);
     transition: all ease 0.3s;
   }
 
@@ -364,9 +373,9 @@ const Container = styled.div`
     font-size: ${props => (props.password.length > 0 ? '0.8em' : '')};
   }
 
-  input:valid {
-    border-bottom: 2px solid var(--green);
-  }
+  // input:valid {
+  //   border-bottom: 2px solid var(--green);
+  // }
 
   .submit-button {
     margin-top: 1rem;
@@ -384,9 +393,16 @@ const Container = styled.div`
   .link-button {
     background: transparent;
     border: none;
-    color: blue;
+    color: var(--blue);
+    font-weight: bold;
     margin-top: 0.4rem;
     cursor: pointer;
+  }
+
+  .error-message {
+    color: var(--red);
+    width: 250px;
+    font-weight: bold;
   }
 `;
 
