@@ -2,6 +2,8 @@ import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
 import { animated, useTransition } from 'react-spring';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
 
 import UserContext from '../context/UserContext';
 
@@ -13,7 +15,9 @@ const Modal = ({ showModal, setShowModal }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
+  // Context to store authenticated user inforamtion
   const [user, setUser] = useContext(UserContext);
 
   // Animation transitions for backdrop, modal card, and form card
@@ -153,7 +157,7 @@ const Modal = ({ showModal, setShowModal }) => {
                               <label>
                                 <input
                                   className="password-input"
-                                  type="password"
+                                  type={showPassword ? 'text' : 'password'}
                                   pattern="(?=.*\d)(?=.*[~`!@#$%^*()+=_-{}\|:;”’?/<>,.]).{8,}"
                                   title="Must be at least 8 characters long and contain at least one number and one special characer (~`!@#$%^*()+=_-{}[]\|:;”’?/<>,.)"
                                   autoComplete="off"
@@ -162,6 +166,21 @@ const Modal = ({ showModal, setShowModal }) => {
                                   onChange={e => setPassword(e.target.value)}
                                 />
                                 <span className="placeholder">Password</span>
+                                {showPassword ? (
+                                  <FontAwesomeIcon
+                                    className="password-icon"
+                                    icon={faEye}
+                                    onClick={() => {
+                                      setShowPassword(false);
+                                    }}
+                                  />
+                                ) : (
+                                  <FontAwesomeIcon
+                                    className="password-icon"
+                                    icon={faEyeSlash}
+                                    onClick={() => setShowPassword(true)}
+                                  />
+                                )}
                               </label>
                               {errorMessage && (
                                 <p className="error-message">{errorMessage}</p>
@@ -227,7 +246,7 @@ const Modal = ({ showModal, setShowModal }) => {
                               <label>
                                 <input
                                   className="password-input"
-                                  type="password"
+                                  type={showPassword ? 'text' : 'password'}
                                   pattern="(?=.*\d)(?=.*[~`!@#$%^*()+=_-{}\|:;”’?/<>,.]).{8,}"
                                   title="Must be at least 8 characters long and contain at least one number and one special characer (~`!@#$%^*()+=_-{}[]\|:;”’?/<>,.)"
                                   autoComplete="off"
@@ -236,6 +255,21 @@ const Modal = ({ showModal, setShowModal }) => {
                                   onChange={e => setPassword(e.target.value)}
                                 />
                                 <span className="placeholder">Password</span>
+                                {showPassword ? (
+                                  <FontAwesomeIcon
+                                    className="password-icon"
+                                    icon={faEye}
+                                    onClick={() => {
+                                      setShowPassword(false);
+                                    }}
+                                  />
+                                ) : (
+                                  <FontAwesomeIcon
+                                    className="password-icon"
+                                    icon={faEyeSlash}
+                                    onClick={() => setShowPassword(true)}
+                                  />
+                                )}
                               </label>
                               {errorMessage && (
                                 <p className="error-message">{errorMessage}</p>
@@ -256,6 +290,12 @@ const Modal = ({ showModal, setShowModal }) => {
                           </div>
                         )}
                       </div>
+                      <button
+                        className="close-button"
+                        onClick={() => setShowModal(false)}
+                      >
+                        Close
+                      </button>
                     </animated.div>
                   )
                 );
@@ -269,7 +309,7 @@ const Modal = ({ showModal, setShowModal }) => {
 };
 
 const Container = styled.div`
-  & .backdrop {
+  .backdrop {
     position: fixed;
     left: 0;
     top: 0;
@@ -278,10 +318,10 @@ const Container = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgba(250, 250, 250, 0.75);
+    background-color: rgba(248, 247, 250, 0.75);
     overflow: hidden;
   }
-  & .card {
+  .card {
     position: relative;
     border-radius: 20px;
     border: 1px var(--lightpurple) solid;
@@ -289,7 +329,7 @@ const Container = styled.div`
     padding: 1.2rem;
     width: 320px;
     height: ${props => (props.errorMessage ? '461px' : '425px')};
-    background: var(--white) l;
+    background: var(--white);
     transition: height ease 0.2s;
   }
 
@@ -377,6 +417,13 @@ const Container = styled.div`
   //   border-bottom: 2px solid var(--green);
   // }
 
+  .password-icon {
+    position: absolute;
+    right: 0;
+    top: 10px;
+    color: var(--purple);
+  }
+
   .submit-button {
     margin-top: 1rem;
     padding: 1rem 4rem;
@@ -396,6 +443,17 @@ const Container = styled.div`
     color: var(--blue);
     font-weight: bold;
     margin-top: 0.4rem;
+    cursor: pointer;
+  }
+
+  .close-button {
+    position: absolute;
+    top: -30px;
+    right: 0;
+    background: transparent;
+    border: none;
+    text-transform: uppercase;
+    color: var(--purple);
     cursor: pointer;
   }
 
