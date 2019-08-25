@@ -11,6 +11,7 @@ Additions according to https://zellwk.com/blog/css-reset/ and personal preferenc
   --red: rgb(247, 20, 103);
   --blue: rgb(46, 89, 243);
   --white: rgb(248, 247, 250);
+  --grey: rgb(204, 195, 214);
 }
 
 /* Document
@@ -136,10 +137,13 @@ pre {
 
 /**
  * Remove the gray background on active links in IE 10.
+ Personal: inherit colors and remove underline
  */
 
 a {
   background-color: transparent;
+  color: inherit;
+  text-decoration: none;
 }
 
 /**

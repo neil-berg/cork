@@ -50,7 +50,13 @@ const Modal = ({ showModal, setShowModal }) => {
       setShowLogin(true);
 
       // Store the created user in app-level context
-      setUser({ username, loggedIn: true });
+      setUser({
+        name,
+        username,
+        email,
+        _id: res.data.user._id,
+        isLoggedIn: true
+      });
 
       // Reset the form
       setName('');
@@ -91,7 +97,13 @@ const Modal = ({ showModal, setShowModal }) => {
 
       const username = res.data.user.username;
       // Store the created user in app-level context
-      setUser({ username, loggedIn: true });
+      setUser({
+        name,
+        username,
+        email,
+        _id: res.data.user._id,
+        isLoggedIn: true
+      });
 
       // Clear the form
       setEmail('');
@@ -318,7 +330,8 @@ const Container = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgba(248, 247, 250, 0.75);
+    // background-color: rgba(248, 247, 250, 0.75);
+    background-color: var(--grey);
     overflow: hidden;
   }
   .card {

@@ -8,9 +8,10 @@ const upload = require('../middleware/upload');
 const router = new express.Router();
 
 // TEST
-router.get('/api/test', (req, res) => {
-  res.send({ message: 'from express' });
-});
+// router.post('/api/test', (req, res) => {
+//   console.log(req.header('Authorization'));
+//   res.send({ message: 'from express' });
+// });
 
 // POST /api/users
 //
@@ -107,7 +108,6 @@ router.get('/api/users/me', auth, async (req, res) => {
 router.get('/api/users/:id/avatar', auth, async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
-    console.log(user);
     if (!user || !user.avatar) {
       throw new Error();
     }
