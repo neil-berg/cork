@@ -7,7 +7,7 @@ import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
 
 import UserContext from '../context/UserContext';
 
-const Modal = ({ showModal, setShowModal }) => {
+const AuthModal = ({ showAuthModal, setShowAuthModal }) => {
   // Local UI state and form values
   const [showLogin, setShowLogin] = useState(true);
   const [name, setName] = useState('');
@@ -21,13 +21,13 @@ const Modal = ({ showModal, setShowModal }) => {
   const [user, setUser] = useContext(UserContext);
 
   // Animation transitions for backdrop, modal card, and form card
-  const backdropTransition = useTransition(showModal, null, {
+  const backdropTransition = useTransition(showAuthModal, null, {
     from: { opacity: 0 },
     enter: { opacity: 1 },
     leave: { opacity: 0 }
   });
 
-  const cardTransition = useTransition(showModal, null, {
+  const cardTransition = useTransition(showAuthModal, null, {
     from: { opacity: 0, transform: `translateY(-100px)` },
     enter: { opacity: 1, transform: `translateY(0)` },
     leave: { opacity: 0, transform: `translateY(-100px)` }
@@ -46,7 +46,7 @@ const Modal = ({ showModal, setShowModal }) => {
 
       // Store JWT in localstorage for further auth calls and then close modal
       localStorage.setItem('cork-token', res.data.token);
-      setShowModal(false);
+      setShowAuthModal(false);
       setShowLogin(true);
 
       // Store the created user in app-level context
@@ -93,7 +93,7 @@ const Modal = ({ showModal, setShowModal }) => {
       // Update JWT and time of token creation in local storage
       localStorage.removeItem('cork-token');
       localStorage.setItem('cork-token', res.data.token);
-      setShowModal(false);
+      setShowAuthModal(false);
 
       const username = res.data.user.username;
       // Store the created user in app-level context
@@ -136,7 +136,7 @@ const Modal = ({ showModal, setShowModal }) => {
               role="dialog"
               onClick={e => {
                 if (e.target.classList.contains('backdrop')) {
-                  setShowModal(false);
+                  setShowAuthModal(false);
                 }
               }}
             >
@@ -304,7 +304,7 @@ const Modal = ({ showModal, setShowModal }) => {
                       </div>
                       <button
                         className="close-button"
-                        onClick={() => setShowModal(false)}
+                        onClick={() => setShowAuthModal(false)}
                       >
                         Close
                       </button>
@@ -330,8 +330,7 @@ const Container = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    // background-color: rgba(248, 247, 250, 0.75);
-    background-color: var(--grey);
+    background-color: var(--purplegrey);
     overflow: hidden;
   }
   .card {
@@ -477,4 +476,4 @@ const Container = styled.div`
   }
 `;
 
-export default Modal;
+export default AuthModal;

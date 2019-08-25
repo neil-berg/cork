@@ -4,13 +4,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle } from '@fortawesome/free-regular-svg-icons';
 import { ReactComponent as DotsMenu } from '../assets/dots-menu.svg';
 
-import UserMenu from './UserMenu';
 import Portal from './Portal';
-import Modal from './Modal';
+import AuthModal from './AuthModal';
+import UserMenuModal from './UserMenuModal';
 
 const Header = () => {
-  const [showModal, setShowModal] = useState(false);
-  const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showUserMenuModal, setShowUserMenuModal] = useState(false);
   return (
     <>
       <HeaderContainer>
@@ -21,20 +21,21 @@ const Header = () => {
           <FontAwesomeIcon
             className="header__icon-user"
             icon={faUserCircle}
-            // onClick={() => setShowModal(!showModal)}
-            onClick={() => setShowUserMenu(!showUserMenu)}
+            onClick={() => setShowUserMenuModal(!showUserMenuModal)}
           />
         </div>
-
-        <UserMenu
-          showModal={showModal}
-          setShowModal={setShowModal}
-          showUserMenu={showUserMenu}
-          setShowUserMenu={setShowUserMenu}
-        />
       </HeaderContainer>
       <Portal>
-        <Modal showModal={showModal} setShowModal={setShowModal} />
+        <AuthModal
+          showAuthModal={showAuthModal}
+          setShowAuthModal={setShowAuthModal}
+        />
+        <UserMenuModal
+          showAuthModal={showAuthModal}
+          setShowAuthModal={setShowAuthModal}
+          showUserMenuModal={showUserMenuModal}
+          setShowUserMenuModal={setShowUserMenuModal}
+        />
       </Portal>
     </>
   );

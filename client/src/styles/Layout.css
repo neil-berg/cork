@@ -11,7 +11,11 @@ Additions according to https://zellwk.com/blog/css-reset/ and personal preferenc
   --red: rgb(247, 20, 103);
   --blue: rgb(46, 89, 243);
   --white: rgb(248, 247, 250);
-  --grey: rgb(204, 195, 214);
+  --grey: rgb(151, 151, 153);
+  --purplegrey: rgb(204, 195, 214);
+  --lightgrey: rgb(219, 216, 216);
+  --verylightgrey: rgb(243, 243, 243);
+  --black: rgb(76, 76, 79);
 }
 
 /* Document
@@ -68,6 +72,7 @@ body {
   margin: 0;
   font-family: 'Barlow', sans-serif;
   background: var(--white);
+  color: var(--black);
 }
 
 /**
