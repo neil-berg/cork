@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { animated, useTransition } from 'react-spring';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle, faHandPeace } from '@fortawesome/free-regular-svg-icons';
-import { faSlidersH, faSignInAlt } from '@fortawesome/free-solid-svg-icons';
+import { faSlidersH } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 
 import UserContext from '../context/UserContext';
@@ -16,17 +16,6 @@ const UserMenuModal = ({
   setShowUserMenuModal
 }) => {
   const [user, setUser] = useContext(UserContext);
-
-  // const animationProps = useSpring({
-  //   opacity: showUserMenu ? 1 : 0,
-  //   transform: showUserMenu ? `scale(1)` : `scale(0.6)`
-  // });
-
-  // const transition = useTransition(showUserMenuModal, null, {
-  //   from: { opacity: 0, transform: `scale(0.6)` },
-  //   enter: { opacity: 1, transform: `scale(1)` },
-  //   leave: { opacity: 0, transform: `scale(0.6)` }
-  // });
 
   const transition = useTransition(showUserMenuModal, null, {
     from: { opacity: 0, transform: `translateX(50px)` },
@@ -57,11 +46,7 @@ const UserMenuModal = ({
   };
 
   return (
-    <UserMenuContainer
-    // style={animationProps}
-    // showUserMenu={showUserMenu}
-    // onClick={() => setShowUserMenu(false)}
-    >
+    <UserMenuContainer>
       {transition.map(({ item, key, props: animation }) => {
         return (
           item && (
@@ -79,10 +64,9 @@ const UserMenuModal = ({
             >
               {transition.map(({ item, key, props: animation }) => {
                 return (
-                  item &&
-                  user.isLoggedIn && (
+                  item && (
                     <animated.nav className="menu" key={key} style={animation}>
-                      <Link to="/profile" className="menu__link-details">
+                      <Link to="/account" className="menu__link-details">
                         <FontAwesomeIcon
                           className="menu__icon-avatar"
                           icon={faUserCircle}
@@ -90,7 +74,7 @@ const UserMenuModal = ({
                         <p className="menu__username">{user.username}</p>
                         <p className="menu__email">{user.email}</p>
                       </Link>
-                      <Link to="/profile" className="menu__link">
+                      <Link to="/account" className="menu__link">
                         <FontAwesomeIcon
                           className="menu__icon-settings"
                           icon={faSlidersH}
@@ -109,26 +93,6 @@ const UserMenuModal = ({
                           icon={faHandPeace}
                         />
                         <p className="menu__button-text">Sign Out</p>
-                      </button>
-                    </animated.nav>
-                  )
-                );
-              })}
-
-              {transition.map(({ item, key, props: animation }) => {
-                return (
-                  item &&
-                  !user.isLoggedIn && (
-                    <animated.nav className="menu" key={key} style={animation}>
-                      <button
-                        className="menu__button"
-                        onClick={() => {
-                          setShowUserMenuModal(false);
-                          setShowAuthModal(true);
-                        }}
-                      >
-                        <FontAwesomeIcon icon={faSignInAlt} />
-                        <span className="menu__button-text">Log In</span>
                       </button>
                     </animated.nav>
                   )

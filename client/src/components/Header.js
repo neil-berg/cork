@@ -1,40 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle } from '@fortawesome/free-regular-svg-icons';
-import { ReactComponent as DotsMenu } from '../assets/dots-menu.svg';
 
+import UserContext from '../context/UserContext';
 import Portal from './Portal';
-import AuthModal from './AuthModal';
 import UserMenuModal from './UserMenuModal';
+import AuthModal from './AuthModal';
 
 const Header = () => {
+  // To determine whether or not a user is logged in or not
+  const [user, setUser] = useContext(UserContext);
+
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showUserMenuModal, setShowUserMenuModal] = useState(false);
+
   return (
     <>
       <HeaderContainer>
-        <h1>Cork</h1>
-        <div className="icon-container">
-          <DotsMenu className="header__icon-menu" />
+        <Link to="/">
+          <h1>Cork</h1>
+        </Link>
 
-          <FontAwesomeIcon
-            className="header__icon-user"
-            icon={faUserCircle}
-            onClick={() => setShowUserMenuModal(!showUserMenuModal)}
-          />
-        </div>
+        <FontAwesomeIcon
+          className="header__icon"
+          icon={faUserCircle}
+          onClick={() => {
+            user.isLoggedIn
+              ? setShowUserMenuModal(!showUserMenuModal)
+              : setShowAuthModal(!showAuthModal);
+          }}
+        />
       </HeaderContainer>
       <Portal>
-        <AuthModal
-          showAuthModal={showAuthModal}
-          setShowAuthModal={setShowAuthModal}
-        />
         <UserMenuModal
           showAuthModal={showAuthModal}
           setShowAuthModal={setShowAuthModal}
           showUserMenuModal={showUserMenuModal}
           setShowUserMenuModal={setShowUserMenuModal}
+        />
+        <AuthModal
+          showAuthModal={showAuthModal}
+          setShowAuthModal={setShowAuthModal}
         />
       </Portal>
     </>
@@ -55,17 +63,11 @@ const HeaderContainer = styled.header`
     font-family: 'Satisfy', cursive;
   }
 
-  .header__icon-menu {
-    width: 1.5rem;
-    height: 1.5rem;
-    fill: var(--white);
-    margin-right: 1rem;
-  }
-
-  .header__icon-user {
+  .header__icon {
     width: 1.6rem;
     height: 1.6rem;
     color: var(--white);
+    cursor: pointer;
   }
 `;
 export default Header;
