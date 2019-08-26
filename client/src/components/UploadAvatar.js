@@ -9,7 +9,7 @@ import UserContext from '../context/UserContext';
 const UploadAvatar = () => {
   const [file, setFile] = useState('');
   const [filename, setFilename] = useState('Choose File');
-  const [uploadedFile, setUploadedFile] = useState(null);
+  const [fileURL, setFileURL] = useState('');
 
   const [user, setUser] = useContext(UserContext);
 
@@ -28,17 +28,11 @@ const UploadAvatar = () => {
         }
       });
 
-      // Then retrieve the image for rendering
-      const res = await axios.get(`/api/users/${user.id}/avatar`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-
-      const b64string = res.data;
-      var buf = Buffer.from(b64string, 'base64');
-      console.log(buf);
-      // setUploadedFile(res.data);
+      // TODO: Shift avatar URL to user context? Shift API GET request to useEffect? Somehow persist user avatar link to localhost:3001/api/users/:id/avatar
+      // Save the GET endpoint
+      setFileURL(
+        `${process.env.REACT_APP_API_URL}/api/users/${user.id}/avatar`
+      );
     } catch (error) {
       console.log(error);
     }
@@ -66,7 +60,13 @@ const UploadAvatar = () => {
           <input type="submit" value="Upload" />
         </div>
       </form>
-      <img src={`data:image/jpeg;base64,${uploadedFile}`} />
+      {/* <img
+        className="user-avatar-image"
+        src={`${process.env.REACT_APP_API_URL}/api/users/${user.id}/avatar`}
+      /> */}
+      {fileURL.length > 0 && (
+        <img className="user-avatar-image" src={fileURL} />
+      )}
     </AvatarContainer>
   );
 };

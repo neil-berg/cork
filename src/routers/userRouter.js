@@ -105,7 +105,7 @@ router.get('/api/users/me', auth, async (req, res) => {
 // GET /api/users/:id/avatar
 //
 // Get user avatar
-router.get('/api/users/:id/avatar', auth, async (req, res) => {
+router.get('/api/users/:id/avatar', async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
     if (!user || !user.avatar) {
