@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,10 +8,44 @@ import UserContext from '../context/UserContext';
 
 const UploadAvatar = () => {
   const [file, setFile] = useState('');
-  const [filename, setFilename] = useState('Choose File');
-  const [fileURL, setFileURL] = useState('');
+  const [filename, setFilename] = useState('Change Image');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [avatarExists, setAvatarExists] = useState(false);
 
   const [user, setUser] = useContext(UserContext);
+
+  // Check if a user image exists
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const token = localStorage.getItem('cork-token');
+        const res = await axios.get(`/api/users/${user.id}/avatar`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        if (res.status === 200) {
+          setAvatarExists(true);
+        }
+      } catch (error) {
+        setAvatarExists(false);
+      }
+    };
+
+    fetchUserDetails();
+  }, [user.id]);
+
+  const handleChangeImage = async e => {
+    const imageFile = e.target.files[0];
+    if (imageFile.size > 15000000) {
+      setErrorMessage('File size must be less than 15 MB.');
+    } else if (/(jpeg|jpg|png)$/.test(imageFile.type)) {
+      setErrorMessage('Files must be JPEG, JPG, or PNG.');
+    } else {
+      setFile(imageFile);
+      setFilename(imageFile.name);
+    }
+  };
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -27,12 +61,6 @@ const UploadAvatar = () => {
           'Content-Type': 'multipart/form-data'
         }
       });
-
-      // TODO: Shift avatar URL to user context? Shift API GET request to useEffect? Somehow persist user avatar link to localhost:3001/api/users/:id/avatar
-      // Save the GET endpoint
-      setFileURL(
-        `${process.env.REACT_APP_API_URL}/api/users/${user.id}/avatar`
-      );
     } catch (error) {
       console.log(error);
     }
@@ -40,33 +68,34 @@ const UploadAvatar = () => {
 
   return (
     <AvatarContainer>
-      <form action="" className="profile-form" onSubmit={e => handleSubmit(e)}>
+      <form className="profile-form" onSubmit={e => handleSubmit(e)}>
         <div className="avatar-container">
-          <FontAwesomeIcon className="avatar-icon" icon={faUserCircle} />
+          {avatarExists ? (
+            <img
+              className="avatar-image"
+              src={`${process.env.REACT_APP_API_URL}/api/users/${
+                user.id
+              }/avatar`}
+              alt="user avatar"
+            />
+          ) : (
+            <FontAwesomeIcon className="avatar-icon" icon={faUserCircle} />
+          )}
           <input
             className="file-input"
             type="file"
             name="avatar"
             id="avatar"
-            accept="image/png, image/jpeg"
-            onChange={e => {
-              setFile(e.target.files[0]);
-              setFilename(e.target.files[0].name);
-            }}
+            accept="image/png, image/jpeg, image/jpg"
+            onChange={e => handleChangeImage(e)}
           />
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
           <label className="avatar-label" htmlFor="avatar">
             {filename}
           </label>
-          <input type="submit" value="Upload" />
+          {!avatarExists && <input type="submit" value="Upload" />}
         </div>
       </form>
-      {/* <img
-        className="user-avatar-image"
-        src={`${process.env.REACT_APP_API_URL}/api/users/${user.id}/avatar`}
-      /> */}
-      {fileURL.length > 0 && (
-        <img className="user-avatar-image" src={fileURL} />
-      )}
     </AvatarContainer>
   );
 };
@@ -79,9 +108,16 @@ const AvatarContainer = styled.div`
     justify-content: center;
   }
 
+  .avatar-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 1px var(--lightgrey) solid;
+  }
+
   .avatar-icon {
-    width: 75px;
-    height: 75px;
+    width: 100px;
+    height: 100px;
     color: var(--grey);
   }
 
@@ -90,6 +126,11 @@ const AvatarContainer = styled.div`
     color: var(--purple);
     font-weight: bold;
     cursor: pointer;
+  }
+
+  .error-message {
+    color: var(--red);
+    padding-top: 1rem;
   }
 
   [type='file'] {
