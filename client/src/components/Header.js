@@ -1,5 +1,6 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle } from '@fortawesome/free-regular-svg-icons';
@@ -10,11 +11,33 @@ import UserMenuModal from './UserMenuModal';
 import AuthModal from './AuthModal';
 
 const Header = () => {
-  // To determine whether or not a user is logged in or not
-  const [user, setUser] = useContext(UserContext);
-
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showUserMenuModal, setShowUserMenuModal] = useState(false);
+  const [avatarExists, setAvatarExists] = useState(false);
+
+  const [user, setUser] = useContext(UserContext);
+  console.log(user.id);
+
+  // If a user id exists, try locating the avatar
+  // Check if a user image exists
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const token = localStorage.getItem('cork-token');
+        const res = await axios.get(`/api/users/${user.id}/avatar`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        if (res.status === 200) {
+          setAvatarExists(true);
+        }
+      } catch (error) {
+        setAvatarExists(false);
+      }
+    };
+    fetchUserDetails();
+  }, [user.id]);
 
   return (
     <>
@@ -23,15 +46,28 @@ const Header = () => {
           <h1>Cork</h1>
         </Link>
 
-        <FontAwesomeIcon
-          className="header__icon"
-          icon={faUserCircle}
-          onClick={() => {
-            user.isLoggedIn
-              ? setShowUserMenuModal(!showUserMenuModal)
-              : setShowAuthModal(!showAuthModal);
-          }}
-        />
+        {avatarExists ? (
+          <img
+            className="avatar-image"
+            src={`${process.env.REACT_APP_API_URL}/api/users/${user.id}/avatar`}
+            alt="user avatar"
+            onClick={() => {
+              user.isLoggedIn
+                ? setShowUserMenuModal(!showUserMenuModal)
+                : setShowAuthModal(!showAuthModal);
+            }}
+          />
+        ) : (
+          <FontAwesomeIcon
+            className="header__icon"
+            icon={faUserCircle}
+            onClick={() => {
+              user.isLoggedIn
+                ? setShowUserMenuModal(!showUserMenuModal)
+                : setShowAuthModal(!showAuthModal);
+            }}
+          />
+        )}
       </HeaderContainer>
       <Portal>
         <UserMenuModal
@@ -51,7 +87,7 @@ const Header = () => {
 
 const HeaderContainer = styled.header`
   position: relative;
-  height: 80px;
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -64,9 +100,17 @@ const HeaderContainer = styled.header`
   }
 
   .header__icon {
-    width: 1.6rem;
-    height: 1.6rem;
+    width: 25px;
+    height: 25px;
     color: var(--white);
+    cursor: pointer;
+  }
+
+  .avatar-image {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: 1px var(--lightgrey) solid;
     cursor: pointer;
   }
 `;

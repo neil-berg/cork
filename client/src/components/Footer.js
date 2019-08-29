@@ -19,7 +19,7 @@ const Footer = () => (
       </Link>
       <Link to="/wines/explore" className="link">
         <GrapesIcon className="link__icon" />
-        <span className="link__text">Explore</span>
+        <span className="link__text">My Wines</span>
       </Link>
     </nav>
   </FooterContainer>
@@ -30,7 +30,7 @@ const FooterContainer = styled.footer`
     position: fixed;
     bottom: 0;
     left: 0;
-    height: 90px;
+    height: 60px;
     width: 100vw;
     background: var(--verylightgrey);
     border-top: 1px solid var(--lightgrey);
@@ -47,13 +47,14 @@ const FooterContainer = styled.footer`
   }
 
   .link__icon {
-    width: 35px;
-    height: 35px;
+    width: 25px;
+    height: 25px;
     fill: var(--black);
   }
 
   .link__text {
-    padding-top: 0.5rem;
+    padding-top: 0.25rem;
+    font-size: 0.8em;
   }
 
   @media screen and (min-width: 600px) {

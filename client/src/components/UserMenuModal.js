@@ -109,7 +109,7 @@ const UserMenuModal = ({
 const UserMenuContainer = styled.div`
   .backdrop {
     position: fixed;
-    top: 80px;
+    top: 60px;
     left: 0;
     height: 100vh;
     width: 100vw;
