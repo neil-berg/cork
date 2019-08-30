@@ -6,7 +6,7 @@ import { faUserCircle } from '@fortawesome/free-regular-svg-icons';
 
 import UserContext from '../context/UserContext';
 
-const UploadAvatar = () => {
+const ChangeAvatar = () => {
   const [file, setFile] = useState('');
   const [filename, setFilename] = useState('Change Image');
   const [errorMessage, setErrorMessage] = useState('');
@@ -49,6 +49,10 @@ const UploadAvatar = () => {
 
   const handleSubmit = async e => {
     e.preventDefault();
+
+    if (filename === 'Change Image') {
+      return setErrorMessage('Please upload an image.');
+    }
     const formData = new FormData();
     formData.append('avatar', file);
     try {
@@ -152,8 +156,8 @@ const AvatarContainer = styled.div`
     cursor: pointer;
     color: var(--white);
     background: var(--purple);
-    box-shadow: 0px 10px 10px rgba(138, 54, 92, 0.15);
+    box-shadow: 0px 5px 5px rgba(138, 54, 92, 0.15);
   }
 `;
 
-export default UploadAvatar;
+export default ChangeAvatar;

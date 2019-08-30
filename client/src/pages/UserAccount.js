@@ -1,8 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import UploadAvatar from '../components/UploadAvatar';
 import Layout from '../components/Layout';
+import ChangeAvatar from '../components/ChangeAvatar';
+import ChangeUserInfo from '../components/ChangeUserInfo';
+import ChangePassword from '../components/ChangePassword';
+import DeleteAccount from '../components/DeleteAccount';
 
 const UserAccount = () => {
   return (
@@ -10,18 +13,16 @@ const UserAccount = () => {
       <Container>
         <div className="profile">
           <h2>Profile</h2>
-          <UploadAvatar />
-
-          {/* <div className="input-container">
-              <label htmlFor="email">Email Address</label>
-              <input
-                className="email-input"
-                type="email"
-                name="email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-              />
-            </div> */}
+          <ChangeAvatar />
+          <ChangeUserInfo />
+        </div>
+        <div className="password">
+          <h2>Password</h2>
+          <ChangePassword />
+        </div>
+        <div className="delete-account">
+          <h2>Delete Account</h2>
+          <DeleteAccount />
         </div>
       </Container>
     </Layout>
@@ -32,6 +33,13 @@ const Container = styled.div`
   max-width: 600px;
   margin: 0 auto;
   padding: 1rem;
+
+  .profile,
+  .password,
+  .delete-account {
+    border-bottom: 1px var(--lightgrey) solid;
+    padding: 3rem 0;
+  }
 `;
 
 export default UserAccount;
