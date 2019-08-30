@@ -27,7 +27,7 @@ const App = () => {
           name,
           username,
           email,
-          id: _id,
+          _id,
           isLoggedIn: true
         });
       } catch (error) {

@@ -16,15 +16,13 @@ const Header = () => {
   const [avatarExists, setAvatarExists] = useState(false);
 
   const [user, setUser] = useContext(UserContext);
-  console.log(user.id);
 
-  // If a user id exists, try locating the avatar
-  // Check if a user image exists
+  // Display avatar is user avatar exists
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
         const token = localStorage.getItem('cork-token');
-        const res = await axios.get(`/api/users/${user.id}/avatar`, {
+        const res = await axios.get(`/api/users/${user._id}/avatar`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -37,7 +35,7 @@ const Header = () => {
       }
     };
     fetchUserDetails();
-  }, [user.id]);
+  }, [user._id]);
 
   return (
     <>
@@ -49,7 +47,9 @@ const Header = () => {
         {avatarExists ? (
           <img
             className="avatar-image"
-            src={`${process.env.REACT_APP_API_URL}/api/users/${user.id}/avatar`}
+            src={`${process.env.REACT_APP_API_URL}/api/users/${
+              user._id
+            }/avatar`}
             alt="user avatar"
             onClick={() => {
               user.isLoggedIn
@@ -110,7 +110,7 @@ const HeaderContainer = styled.header`
     width: 35px;
     height: 35px;
     border-radius: 50%;
-    border: 1px var(--lightgrey) solid;
+    border: 1px var(--lightpurple) solid;
     cursor: pointer;
   }
 `;

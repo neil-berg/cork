@@ -11,15 +11,12 @@ const Footer = () => (
     <nav className="footer-menu">
       <Link to="/" className="link">
         <HomeIcon className="link__icon" />
-        <span className="link__text">Home</span>
       </Link>
       <Link to="/wines/post" className="link">
         <AddIcon className="link__icon" />
-        <span className="link__text">Post</span>
       </Link>
       <Link to="/wines/explore" className="link">
         <GrapesIcon className="link__icon" />
-        <span className="link__text">My Wines</span>
       </Link>
     </nav>
   </FooterContainer>
@@ -30,7 +27,7 @@ const FooterContainer = styled.footer`
     position: fixed;
     bottom: 0;
     left: 0;
-    height: 60px;
+    height: 50px;
     width: 100vw;
     background: var(--verylightgrey);
     border-top: 1px solid var(--lightgrey);
@@ -52,14 +49,18 @@ const FooterContainer = styled.footer`
     fill: var(--black);
   }
 
-  .link__text {
-    padding-top: 0.25rem;
-    font-size: 0.8em;
-  }
-
   @media screen and (min-width: 600px) {
+    .footer-menu {
+      height: 70px;
+    }
+
     .link {
       flex-grow: 1;
+    }
+
+    .link__icon {
+      width: 35px;
+      height: 35px;
     }
   }
 `;

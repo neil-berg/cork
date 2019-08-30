@@ -5,27 +5,6 @@ import UploadAvatar from '../components/UploadAvatar';
 import Layout from '../components/Layout';
 
 const UserAccount = () => {
-  // const uploadAvatar = async e => {
-  //   try {
-  //     const token = localStorage.getItem('cork-token');
-  //     const formData = new FormData();
-  //     formData.append('avatar', e.target.files[0]);
-
-  //     // Send the image to DB
-  //     const res = await axios.post('/api/users/me/avatar', formData, {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //         'Content-Type': 'multipart/form-data'
-  //       }
-  //     });
-
-  //     // Update user context with the avatar
-  //     // setUser({...user, avatar })
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
   return (
     <Layout>
       <Container>

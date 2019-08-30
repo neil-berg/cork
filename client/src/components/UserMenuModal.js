@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { animated, useTransition } from 'react-spring';
@@ -15,6 +15,7 @@ const UserMenuModal = ({
   showUserMenuModal,
   setShowUserMenuModal
 }) => {
+  const [avatarExists, setAvatarExists] = useState(false);
   const [user, setUser] = useContext(UserContext);
 
   const transition = useTransition(showUserMenuModal, null, {
@@ -22,6 +23,26 @@ const UserMenuModal = ({
     enter: { opacity: 1, transform: `translateX(0)` },
     leave: { opacity: 0, transform: `translateX(50px)` }
   });
+
+  // Display avatar is user avatar exists
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const token = localStorage.getItem('cork-token');
+        const res = await axios.get(`/api/users/${user._id}/avatar`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        if (res.status === 200) {
+          setAvatarExists(true);
+        }
+      } catch (error) {
+        setAvatarExists(false);
+      }
+    };
+    fetchUserDetails();
+  }, [user._id]);
 
   const signOutUser = async () => {
     try {
@@ -67,10 +88,20 @@ const UserMenuModal = ({
                   item && (
                     <animated.nav className="menu" key={key} style={animation}>
                       <Link to="/account" className="menu__link-details">
-                        <FontAwesomeIcon
-                          className="menu__icon-avatar"
-                          icon={faUserCircle}
-                        />
+                        {avatarExists ? (
+                          <img
+                            className="menu__avatar-image"
+                            src={`${process.env.REACT_APP_API_URL}/api/users/${
+                              user._id
+                            }/avatar`}
+                            alt="user avatar"
+                          />
+                        ) : (
+                          <FontAwesomeIcon
+                            className="menu__icon-avatar"
+                            icon={faUserCircle}
+                          />
+                        )}
                         <p className="menu__username">{user.username}</p>
                         <p className="menu__email">{user.email}</p>
                       </Link>
@@ -138,10 +169,15 @@ const UserMenuContainer = styled.div`
     transition: all 0.3s ease;
   }
 
-  .menu__icon-avatar {
+  .menu__icon-avatar,
+  .menu__avatar-image {
     width: 50px;
     height: 50px;
     color: var(--grey);
+  }
+
+  .menu__avatar-image {
+    border-radius: 50%;
   }
 
   .menu__icon-settings,

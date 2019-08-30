@@ -19,7 +19,7 @@ const UploadAvatar = () => {
     const fetchUserDetails = async () => {
       try {
         const token = localStorage.getItem('cork-token');
-        const res = await axios.get(`/api/users/${user.id}/avatar`, {
+        const res = await axios.get(`/api/users/${user._id}/avatar`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -33,13 +33,13 @@ const UploadAvatar = () => {
     };
 
     fetchUserDetails();
-  }, [user.id]);
+  }, [user._id]);
 
   const handleChangeImage = async e => {
     const imageFile = e.target.files[0];
     if (imageFile.size > 15000000) {
       setErrorMessage('File size must be less than 15 MB.');
-    } else if (/(jpeg|jpg|png)$/.test(imageFile.type)) {
+    } else if (/^(jpeg|jpg|png)$/.test(imageFile.type)) {
       setErrorMessage('Files must be JPEG, JPG, or PNG.');
     } else {
       setFile(imageFile);
@@ -51,7 +51,6 @@ const UploadAvatar = () => {
     e.preventDefault();
     const formData = new FormData();
     formData.append('avatar', file);
-
     try {
       // Send the image to the DB
       const token = localStorage.getItem('cork-token');
@@ -61,6 +60,8 @@ const UploadAvatar = () => {
           'Content-Type': 'multipart/form-data'
         }
       });
+      // Reload to force new img src GET request
+      window.location.reload(false);
     } catch (error) {
       console.log(error);
     }
@@ -74,7 +75,7 @@ const UploadAvatar = () => {
             <img
               className="avatar-image"
               src={`${process.env.REACT_APP_API_URL}/api/users/${
-                user.id
+                user._id
               }/avatar`}
               alt="user avatar"
             />
@@ -93,7 +94,7 @@ const UploadAvatar = () => {
           <label className="avatar-label" htmlFor="avatar">
             {filename}
           </label>
-          {!avatarExists && <input type="submit" value="Upload" />}
+          <input type="submit" value="Upload" />
         </div>
       </form>
     </AvatarContainer>
@@ -148,6 +149,10 @@ const AvatarContainer = styled.div`
     padding: 0.5rem 1rem;
     border-radius: 20px;
     margin-top: 1rem;
+    cursor: pointer;
+    color: var(--white);
+    background: var(--purple);
+    box-shadow: 0px 10px 10px rgba(138, 54, 92, 0.15);
   }
 `;
 
