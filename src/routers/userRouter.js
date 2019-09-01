@@ -1,5 +1,6 @@
 const express = require('express');
 const sharp = require('sharp');
+const bcrypt = require('bcryptjs');
 
 const User = require('../models/user');
 const auth = require('../middleware/auth');
@@ -122,9 +123,20 @@ router.get('/api/users/:id/avatar', async (req, res) => {
 //
 // Update information for authenticated user
 router.patch('/api/users/me', auth, async (req, res) => {
-  const propertiesToUpdate = Object.keys(req.body);
-  // Todo: front end validation/sanitizing for valid update properties
   try {
+    // If updating password, ensure that the value entered
+    // for the user's current password actually matches
+    // what's in the DB first before proceeding with the update
+    if (req.body.hasOwnProperty('password')) {
+      const reqCurrentPassword = await bcrypt.hash(req.body.currentPassword, 8);
+
+      if (req.user.password !== reqCurrentPassword) {
+        throw new Error();
+      }
+      delete req.body.currentPassword;
+    }
+
+    const propertiesToUpdate = Object.keys(req.body);
     propertiesToUpdate.forEach(property => {
       req.user[property] = req.body[property];
     });
