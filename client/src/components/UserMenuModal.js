@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import { animated, useTransition } from 'react-spring';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -10,10 +10,9 @@ import axios from 'axios';
 import UserContext from '../context/UserContext';
 
 const UserMenuModal = ({
-  showAuthModal,
-  setShowAuthModal,
   showUserMenuModal,
-  setShowUserMenuModal
+  setShowUserMenuModal,
+  history
 }) => {
   const [avatarExists, setAvatarExists] = useState(false);
   const [user, setUser] = useContext(UserContext);
@@ -61,6 +60,8 @@ const UserMenuModal = ({
         email: null,
         isLoggedIn: false
       });
+      // Send user to the home page
+      history.push('/');
     } catch (error) {
       console.log(error);
     }
@@ -235,4 +236,4 @@ const UserMenuContainer = styled.div`
     }
   }
 `;
-export default UserMenuModal;
+export default withRouter(UserMenuModal);

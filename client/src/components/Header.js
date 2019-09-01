@@ -71,8 +71,6 @@ const Header = () => {
       </HeaderContainer>
       <Portal>
         <UserMenuModal
-          showAuthModal={showAuthModal}
-          setShowAuthModal={setShowAuthModal}
           showUserMenuModal={showUserMenuModal}
           setShowUserMenuModal={setShowUserMenuModal}
         />
