@@ -128,11 +128,16 @@ router.patch('/api/users/me', auth, async (req, res) => {
     // for the user's current password actually matches
     // what's in the DB first before proceeding with the update
     if (req.body.hasOwnProperty('password')) {
-      const reqCurrentPassword = await bcrypt.hash(req.body.currentPassword, 8);
+      // Compare hashed passwords
+      const isMatch = await bcrypt.compare(
+        req.body.currentPassword,
+        req.user.password
+      );
 
-      if (req.user.password !== reqCurrentPassword) {
+      if (!isMatch) {
         throw new Error();
       }
+
       delete req.body.currentPassword;
     }
 
