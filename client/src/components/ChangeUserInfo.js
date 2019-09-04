@@ -247,7 +247,7 @@ const SettingsContainer = styled.div`
   label {
     font-size: 1.1em;
     font-weight: bold;
-    color: ;
+    color: var(--black);
   }
 
   input {

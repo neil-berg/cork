@@ -34,6 +34,10 @@ const Container = styled.div`
   margin: 0 auto;
   padding: 1rem;
 
+  h2 {
+    font-size: 1.65em;
+  }
+
   .profile,
   .password,
   .delete-account {

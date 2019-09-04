@@ -78,9 +78,7 @@ const ChangeAvatar = () => {
           {avatarExists ? (
             <img
               className="avatar-image"
-              src={`${process.env.REACT_APP_API_URL}/api/users/${
-                user._id
-              }/avatar`}
+              src={`${process.env.REACT_APP_API_URL}/api/users/${user._id}/avatar`}
               alt="user avatar"
             />
           ) : (
@@ -150,13 +148,14 @@ const AvatarContainer = styled.div`
   }
 
   [type='submit'] {
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
+    padding: 0.5rem 2rem;
+    border-radius: 5px;
     margin-top: 1rem;
     cursor: pointer;
-    color: var(--white);
-    background: var(--purple);
-    box-shadow: 0px 5px 5px rgba(138, 54, 92, 0.15);
+    color: var(--black);
+    font-weight: bold;
+    background: var(--lightpurple);
+    border: 1px var(--purplegrey) solid;
   }
 `;
 
