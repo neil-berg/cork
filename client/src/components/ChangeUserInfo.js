@@ -312,6 +312,14 @@ const SettingsContainer = styled.div`
   .button-cancel:hover {
     border: 1px var(--lightpurple) solid;
   }
+
+  @media (hover: hover) {
+    .button-save:hover {
+      background: var(--verylightgrey);
+      border: 1px var(--purple) solid;
+      color: var(--purple);
+    }
+  }
 `;
 
 export default ChangeUserInfo;

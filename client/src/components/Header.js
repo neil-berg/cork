@@ -47,9 +47,7 @@ const Header = () => {
         {avatarExists ? (
           <img
             className="avatar-image"
-            src={`${process.env.REACT_APP_API_URL}/api/users/${
-              user._id
-            }/avatar`}
+            src={`${process.env.REACT_APP_API_URL}/api/users/${user._id}/avatar`}
             alt="user avatar"
             onClick={() => {
               user.isLoggedIn

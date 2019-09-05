@@ -156,6 +156,15 @@ const AvatarContainer = styled.div`
     font-weight: bold;
     background: var(--lightpurple);
     border: 1px var(--purplegrey) solid;
+    transition: all 0.3s ease;
+  }
+
+  @media (hover: hover) {
+    [type='submit']:hover {
+      background: var(--verylightgrey);
+      border: 1px var(--purple) solid;
+      color: var(--purple);
+    }
   }
 `;
 

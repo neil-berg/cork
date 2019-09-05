@@ -4,6 +4,8 @@ import axios from 'axios';
 
 import UserContext from './context/UserContext';
 import Home from './pages/Home';
+import AddWine from './pages/AddWine';
+import MyWines from './pages/MyWines';
 import UserAccount from './pages/UserAccount';
 import NotFound from './pages/NotFound';
 
@@ -42,6 +44,8 @@ const App = () => {
       <UserContext.Provider value={[user, setUser]}>
         <Switch>
           <Route exact path="/" component={Home} />
+          <Route path="/wines/add" component={AddWine} />
+          <Route path="/wines/view" component={MyWines} />
           <Route path="/account" component={UserAccount} />
           <Route component={NotFound} />
         </Switch>

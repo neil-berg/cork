@@ -1,24 +1,13 @@
 import React, { useContext, useState } from 'react';
+import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
-import { animated, useSpring } from 'react-spring';
 import axios from 'axios';
 
 import UserContext from '../context/UserContext';
 
-const DeleteAccount = () => {
-  const [successMessage, setSuccessMessage] = useState(null);
+const DeleteAccount = ({ history }) => {
   const [errorMessage, setErrorMessage] = useState(null);
-
   const [user, setUser] = useContext(UserContext);
-
-  const successSpring = useSpring({
-    opacity: successMessage ? 1 : 0,
-    transform: successMessage ? `translateY(0)` : `translateY(-20px)`
-  });
-  const errorSpring = useSpring({
-    opacity: errorMessage ? 1 : 0,
-    transform: errorMessage ? `translateY(0)` : `translateY(-20px)`
-  });
 
   const deleteUser = async () => {
     try {
@@ -28,14 +17,18 @@ const DeleteAccount = () => {
           Authorization: `Bearer ${token}`
         }
       });
-      setSuccessMessage('Successfully deleted account');
+
+      // Remove user in context
       setUser({
         _id: null,
         name: null,
         username: null,
         email: null,
-        loggedIn: false
+        isLoggedIn: false
       });
+
+      // Send user to the home page
+      history.push('/');
     } catch (error) {
       setErrorMessage('Error deleting account. Try again.');
       console.log(error);
@@ -44,56 +37,57 @@ const DeleteAccount = () => {
 
   return (
     <DeleteContainer>
-      <animated.p className="success-message" style={successSpring}>
-        {successMessage}
-      </animated.p>
-      <animated.p className="error-message" style={errorSpring}>
-        {errorMessage}
-      </animated.p>
-      <p classname="warning-message">
-        <span className="bold">Warning: </span>This account cannot be undone!
+      <p className="warning-message">
+        <span className="bold">Warning: </span>This action cannot be undone!
       </p>
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
       <button onClick={() => deleteUser()}>Delete Account</button>
     </DeleteContainer>
   );
 };
 
 const DeleteContainer = styled.div`
-  padding: 3rem 0;
+  padding: 2rem 0;
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
 
-  .success-message,
   .error-message {
-    background: var(--green);
-    color: var(--white);
+    color: var(--red);
     font-weight: bold;
-    padding: 0.5rem;
-    text-align: center;
-    border-radius: 5px;
-    position: absolute;
-    top: 1rem;
-    left: 0;
-    width: 100%;
+    padding-top: 1rem;
+    align-self: flex-start;
   }
 
-  .error-message {
-    background: var(--red);
+  .warning-message {
+    align-self: flex-start;
   }
 
   .bold {
     font-weight: bold;
+    color: var(--red);
   }
 
   button {
-    background: var(--lightpurple);
+    background: var(--red);
+    color: var(--white);
     padding: 0.5rem 2rem;
     margin-top: 2rem;
+    min-width: 175px;
+    border: 1px var(--red) solid;
     border-radius: 5px;
+    font-weight: bold;
     cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  @media (hover: hover) {
+    button:hover {
+      background: var(--verylightgrey);
+      color: red;
+    }
   }
 `;
 
-export default DeleteAccount;
+export default withRouter(DeleteAccount);

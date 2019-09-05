@@ -229,13 +229,22 @@ const PasswordContainer = styled.div`
 
   button {
     background: var(--lightpurple);
-    width: 200px;
+    min-width: 175px;
     font-weight: bold;
     cursor: pointer;
     padding: 0.5rem 1rem;
     border-radius: 5px;
     transition: all 0.3s ease;
     margin: 2rem auto 0 auto;
+    transition: all 0.3s ease;
+  }
+
+  @media (hover: hover) {
+    button:hover {
+      background: var(--verylightgrey);
+      border: 1px var(--purple) solid;
+      color: var(--purple);
+    }
   }
 `;
 
