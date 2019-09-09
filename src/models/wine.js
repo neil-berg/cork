@@ -12,6 +12,11 @@ const wineSchema = new mongoose.Schema(
       required: true,
       trim: true
     },
+    rating: {
+      type: Number,
+      default: 0,
+      required: true
+    },
     winetype: {
       type: String,
       required: true,
@@ -34,6 +39,17 @@ const wineSchema = new mongoose.Schema(
     region: {
       type: String,
       trim: true
+    },
+    image: {
+      type: Buffer
+    },
+    review: {
+      type: String,
+      trim: true
+    },
+    likes: {
+      type: Number,
+      default: 0
     }
   },
   {
