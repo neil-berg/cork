@@ -2,13 +2,14 @@ import React, { useContext } from 'react';
 
 import UserContext from '../context/UserContext';
 import Layout from '../components/Layout';
+import AddWineForm from '../components/AddWineForm';
 
 const AddWine = () => {
   const [user, setUser] = useContext(UserContext);
 
   return user.isLoggedIn ? (
     <Layout>
-      <div>Add wine!!!</div>
+      <AddWineForm />
     </Layout>
   ) : (
     <Layout>
