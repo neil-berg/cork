@@ -12,14 +12,16 @@ const AddWineForm = () => {
   const [imageExists, setImageExists] = useState(false);
 
   // State for form inputs and error/success
-  const [name, setName] = useState('');
-  const [rating, setRating] = useState(0);
-  const [winetype, setWineType] = useState('');
-  const [vineyard, setVineyard] = useState('');
-  const [varietal, setVarietal] = useState('');
-  const [country, setCountry] = useState('');
-  const [origin, setOrigin] = useState('');
-  const [review, setReview] = useState('Enter review here...');
+  const [wineInfo, setWineInfo] = useState({
+    name: '',
+    rating: 0,
+    winetype: '',
+    vineyard: '',
+    varietal: '',
+    country: '',
+    origin: '',
+    review: 'Enter review here...'
+  });
   const [sucessMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -38,6 +40,7 @@ const AddWineForm = () => {
   const handleSubmit = async e => {
     e.preventDefault();
 
+    console.log('hitting button?');
     // Clear error states
     setImageErrorMessage('');
     setErrorMessage('');
@@ -51,24 +54,11 @@ const AddWineForm = () => {
       const token = localStorage.getItem('cork-token');
 
       // First POST new wine info without image
-      const res = await axios.post(
-        '/api/wines',
-        {
-          name,
-          rating,
-          winetype,
-          vineyard,
-          varietal,
-          country,
-          origin,
-          review
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+      const res = await axios.post('/api/wines', wineInfo, {
+        headers: {
+          Authorization: `Bearer ${token}`
         }
-      );
+      });
 
       // Then POST wine image using the newly created wine _id
       // Initialize form data for image POST
@@ -82,6 +72,7 @@ const AddWineForm = () => {
       });
 
       setSuccessMessage('Added new wine!');
+      console.log('submitted new wine!');
     } catch (error) {
       setErrorMessage('Error adding new wine. Try again.');
       console.log(error);
@@ -97,9 +88,10 @@ const AddWineForm = () => {
           type="radio"
           name="winetype"
           id={`${item}Choice`}
-          value={item}
-          checked={winetype === item}
-          onChange={e => setWineType(e.target.value)}
+          value={wineInfo[item]}
+          checked={wineInfo.winetype === item}
+          // onChange={e => setWineType(e.target.value)}
+          onChange={e => setWineInfo({ ...wineInfo, winetype: item })}
         />
         <label htmlFor="redChoice">
           {item === 'rose' ? 'Rosé' : item[0].toUpperCase() + item.slice(1)}
@@ -146,8 +138,9 @@ const AddWineForm = () => {
             name="name"
             id="name"
             placeholder="Enter name of the wine"
-            value={name}
-            onChange={e => setName(e.target.value)}
+            value={wineInfo['name']}
+            // onChange={e => setName(e.target.value)}
+            onChange={e => setWineInfo({ ...wineInfo, name: e.target.value })}
           />
           <div className="ratings-container">
             <label htmlFor="rating">Rating</label>
@@ -166,14 +159,17 @@ const AddWineForm = () => {
             <legend>Select type of wine:</legend>
             <div className="wine-type-container">{renderRadioButtons()}</div>
           </fieldset>
+
           <label htmlFor="vineyard">Vineyard</label>
           <input
             type="text"
             name="vineyard"
             id="vineyard"
             placeholder="Enter vineyard name"
-            value={vineyard}
-            onChange={e => setVineyard(e.target.value)}
+            value={wineInfo['vineyard']}
+            onChange={e =>
+              setWineInfo({ ...wineInfo, vineyard: e.target.value })
+            }
           />
           <label htmlFor="varietal">Varietal</label>
           <input
@@ -181,8 +177,10 @@ const AddWineForm = () => {
             name="varietal"
             id="varietal"
             placeholder="Enter varietal type"
-            value={varietal}
-            onChange={e => setVarietal(e.target.value)}
+            value={wineInfo['varietal']}
+            onChange={e =>
+              setWineInfo({ ...wineInfo, varietal: e.target.value })
+            }
           />
           <label htmlFor="country">Country</label>
           <input
@@ -190,8 +188,10 @@ const AddWineForm = () => {
             name="country"
             id="country"
             placeholder="Enter country wine is made in"
-            value={country}
-            onChange={e => setCountry(e.target.value)}
+            value={wineInfo['country']}
+            onChange={e =>
+              setWineInfo({ ...wineInfo, country: e.target.value })
+            }
           />
           <label htmlFor="origin">Origin</label>
           <input
@@ -199,8 +199,8 @@ const AddWineForm = () => {
             name="origin"
             id="origin"
             placeholder="Enter origin of country wine is made in"
-            value={origin}
-            onChange={e => setOrigin(e.target.value)}
+            value={wineInfo['origin']}
+            onChange={e => setWineInfo({ ...wineInfo, origin: e.target.value })}
           />
           <label htmlFor="review">Review</label>
           <textarea
@@ -208,8 +208,9 @@ const AddWineForm = () => {
             id="review"
             cols="30"
             rows="10"
-            value={review}
-            onChange={e => setReview(e.target.value)}
+            value={wineInfo['review']}
+            // onChange={e => setReview(e.target.value)}
+            onChange={e => setWineInfo({ ...wineInfo, review: e.target.value })}
           ></textarea>
         </div>
         <button type="submit">Add Wine</button>
