@@ -5,27 +5,113 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWineBottle, faStar } from '@fortawesome/free-solid-svg-icons';
 
 const AddWineForm = () => {
+  // State for the image upload
   const [file, setFile] = useState('');
   const [filename, setFilename] = useState('Select Image of Wine');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [imageErrorMessage, setImageErrorMessage] = useState('');
   const [imageExists, setImageExists] = useState(false);
+
+  // State for form inputs and error/success
+  const [name, setName] = useState('');
+  const [rating, setRating] = useState(0);
+  const [winetype, setWineType] = useState('');
+  const [vineyard, setVineyard] = useState('');
+  const [varietal, setVarietal] = useState('');
+  const [country, setCountry] = useState('');
+  const [origin, setOrigin] = useState('');
+  const [review, setReview] = useState('Enter review here...');
+  const [sucessMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleChangeImage = async e => {
     const imageFile = e.target.files[0];
     if (imageFile.size > 15000000) {
-      setErrorMessage('File size must be less than 15 MB.');
+      setImageErrorMessage('File size must be less than 15 MB.');
     } else if (/^(jpeg|jpg|png)$/.test(imageFile.type)) {
-      setErrorMessage('Files must be JPEG, JPG, or PNG.');
+      setImageErrorMessage('Files must be JPEG, JPG, or PNG.');
     } else {
       setFile(imageFile);
       setFilename(imageFile.name);
     }
   };
 
+  const handleSubmit = async e => {
+    e.preventDefault();
+
+    // Clear error states
+    setImageErrorMessage('');
+    setErrorMessage('');
+
+    // Need an image before submission
+    if (filename === 'Select Image of Wine') {
+      return setImageErrorMessage('Please upload an image.');
+    }
+
+    try {
+      const token = localStorage.getItem('cork-token');
+
+      // First POST new wine info without image
+      const res = await axios.post(
+        '/api/wines',
+        {
+          name,
+          rating,
+          winetype,
+          vineyard,
+          varietal,
+          country,
+          origin,
+          review
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+
+      // Then POST wine image using the newly created wine _id
+      // Initialize form data for image POST
+      const formData = new FormData();
+      formData.append('image', file);
+      await axios.post(`/api/wines/${res.data._id}/image`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
+      setSuccessMessage('Added new wine!');
+    } catch (error) {
+      setErrorMessage('Error adding new wine. Try again.');
+      console.log(error);
+    }
+  };
+
+  const renderRadioButtons = () => {
+    const wineTypes = ['red', 'white', 'orange', 'rose', 'sparkling'];
+
+    return wineTypes.map((item, i) => (
+      <div key={i}>
+        <input
+          type="radio"
+          name="winetype"
+          id={`${item}Choice`}
+          value={item}
+          checked={winetype === item}
+          onChange={e => setWineType(e.target.value)}
+        />
+        <label htmlFor="redChoice">
+          {item === 'rose' ? 'Rosé' : item[0].toUpperCase() + item.slice(1)}
+        </label>
+      </div>
+    ));
+  };
+
   return (
     <FormContainer>
       <h2>Add Wine</h2>
-      <form className="add-wine-form">
+      <form className="add-wine-form" onSubmit={e => handleSubmit(e)}>
         <div className="image-container">
           {imageExists ? (
             <img
@@ -44,7 +130,9 @@ const AddWineForm = () => {
                 accept="image/png, image/jpeg, image/jpg"
                 onChange={e => handleChangeImage(e)}
               />
-              {errorMessage && <p className="error-message">{errorMessage}</p>}
+              {imageErrorMessage && (
+                <p className="image-error-message">{imageErrorMessage}</p>
+              )}
               <label className="image-label" htmlFor="image">
                 {filename}
               </label>
@@ -58,6 +146,8 @@ const AddWineForm = () => {
             name="name"
             id="name"
             placeholder="Enter name of the wine"
+            value={name}
+            onChange={e => setName(e.target.value)}
           />
           <div className="ratings-container">
             <label htmlFor="rating">Rating</label>
@@ -74,38 +164,7 @@ const AddWineForm = () => {
           <h3>Additional Details</h3>
           <fieldset>
             <legend>Select type of wine:</legend>
-            <div className="wine-type-container">
-              <input type="radio" name="winetype" id="redChoice" value="red" />
-              <label htmlFor="redChoice">Red</label>
-              <input
-                type="radio"
-                name="winetype"
-                id="whiteChoice"
-                value="white"
-              />
-              <label htmlFor="whiteChoice">White</label>
-              <input
-                type="radio"
-                name="winetype"
-                id="orangeChoice"
-                value="orange"
-              />
-              <label htmlFor="orangeChoice">Orange</label>
-              <input
-                type="radio"
-                name="winetype"
-                id="roseChoice"
-                value="rose"
-              />
-              <label htmlFor="roseChoice">Rosé</label>
-              <input
-                type="radio"
-                name="winetype"
-                id="sparklingChoice"
-                value="sparkling"
-              />
-              <label htmlFor="sparklingChoice">Sparkling</label>
-            </div>
+            <div className="wine-type-container">{renderRadioButtons()}</div>
           </fieldset>
           <label htmlFor="vineyard">Vineyard</label>
           <input
@@ -113,6 +172,8 @@ const AddWineForm = () => {
             name="vineyard"
             id="vineyard"
             placeholder="Enter vineyard name"
+            value={vineyard}
+            onChange={e => setVineyard(e.target.value)}
           />
           <label htmlFor="varietal">Varietal</label>
           <input
@@ -120,6 +181,8 @@ const AddWineForm = () => {
             name="varietal"
             id="varietal"
             placeholder="Enter varietal type"
+            value={varietal}
+            onChange={e => setVarietal(e.target.value)}
           />
           <label htmlFor="country">Country</label>
           <input
@@ -127,6 +190,8 @@ const AddWineForm = () => {
             name="country"
             id="country"
             placeholder="Enter country wine is made in"
+            value={country}
+            onChange={e => setCountry(e.target.value)}
           />
           <label htmlFor="origin">Origin</label>
           <input
@@ -134,16 +199,19 @@ const AddWineForm = () => {
             name="origin"
             id="origin"
             placeholder="Enter origin of country wine is made in"
+            value={origin}
+            onChange={e => setOrigin(e.target.value)}
           />
+          <label htmlFor="review">Review</label>
           <textarea
             name="review"
             id="review"
             cols="30"
             rows="10"
-            defaultValue="Write review of wine here:"
+            value={review}
+            onChange={e => setReview(e.target.value)}
           ></textarea>
         </div>
-        {/* <input type="submit" value="Upload" /> */}
         <button type="submit">Add Wine</button>
       </form>
     </FormContainer>
@@ -227,10 +295,6 @@ const FormContainer = styled.div`
     transition: all 0.3s ease;
   }
 
-  [type='radio'] {
-    margin-left: 1rem;
-  }
-
   .info-container,
   .extra-info-container {
     display: flex;
@@ -272,6 +336,14 @@ const FormContainer = styled.div`
 
   .stars-container {
     padding: 1rem 0 0 1rem;
+  }
+
+  // Error messages
+  .image-error-message {
+    color: var(--red);
+    font-size: 1.1em;
+    font-weight: bold
+    padding: 1rem 0;
   }
 `;
 
