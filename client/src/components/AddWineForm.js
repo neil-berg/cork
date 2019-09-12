@@ -40,7 +40,6 @@ const AddWineForm = () => {
   const handleSubmit = async e => {
     e.preventDefault();
 
-    console.log('hitting button?');
     // Clear error states
     setImageErrorMessage('');
     setErrorMessage('');
@@ -74,83 +73,84 @@ const AddWineForm = () => {
       setSuccessMessage('Added new wine!');
       console.log('submitted new wine!');
     } catch (error) {
-      setErrorMessage('Error adding new wine. Try again.');
+      setErrorMessage('Error adding new wine. Please try again.');
       console.log(error);
     }
   };
 
   const renderRadioButtons = () => {
     const wineTypes = ['red', 'white', 'orange', 'rose', 'sparkling'];
-
     return wineTypes.map((item, i) => (
-      <div key={i}>
+      <div key={i} className="radio-container">
         <input
           type="radio"
           name="winetype"
           id={`${item}Choice`}
           value={wineInfo[item]}
           checked={wineInfo.winetype === item}
-          // onChange={e => setWineType(e.target.value)}
           onChange={e => setWineInfo({ ...wineInfo, winetype: item })}
         />
-        <label htmlFor="redChoice">
+        <label htmlFor={`${item}Choice`}>
           {item === 'rose' ? 'Rosé' : item[0].toUpperCase() + item.slice(1)}
         </label>
       </div>
     ));
   };
 
+  const renderStars = () => {
+    const stars = [1, 2, 3, 4, 5].map((item, i) => (
+      <FontAwesomeIcon
+        className="star-icon"
+        key={i}
+        icon={faStar}
+        color={item > wineInfo.rating ? 'lightgrey' : 'orange'}
+        size="2x"
+        onClick={() => setWineInfo({ ...wineInfo, rating: item })}
+      />
+    ));
+    return <div className="stars-container">{stars}</div>;
+  };
+
   return (
     <FormContainer>
-      <h2>Add Wine</h2>
       <form className="add-wine-form" onSubmit={e => handleSubmit(e)}>
+        <h2>Wine Information</h2>
+        <h3 style={{ margin: '0 1rem' }}>The Essentials</h3>
         <div className="image-container">
-          {imageExists ? (
-            <img
-              className="wine-image"
-              // src={`${process.env.REACT_APP_API_URL}/api/wines/${wine._id}/iimage`}
-              alt="wine bottle label"
+          <div className="wine-icon-container">
+            <FontAwesomeIcon className="wine-icon" icon={faWineBottle} />
+            <input
+              className="file-input"
+              type="file"
+              name="image"
+              id="image"
+              accept="image/png, image/jpeg, image/jpg"
+              onChange={e => handleChangeImage(e)}
             />
-          ) : (
-            <div className="wine-icon-container">
-              <FontAwesomeIcon className="wine-icon" icon={faWineBottle} />
-              <input
-                className="file-input"
-                type="file"
-                name="image"
-                id="image"
-                accept="image/png, image/jpeg, image/jpg"
-                onChange={e => handleChangeImage(e)}
-              />
-              {imageErrorMessage && (
-                <p className="image-error-message">{imageErrorMessage}</p>
-              )}
-              <label className="image-label" htmlFor="image">
-                {filename}
-              </label>
-            </div>
-          )}
+            {imageErrorMessage && (
+              <p className="image-error-message">{imageErrorMessage}</p>
+            )}
+            <label className="image-label" htmlFor="image">
+              {filename}
+            </label>
+          </div>
         </div>
         <div className="info-container">
           <label htmlFor="name">Name</label>
           <input
+            required
             type="text"
             name="name"
             id="name"
             placeholder="Enter name of the wine"
             value={wineInfo['name']}
-            // onChange={e => setName(e.target.value)}
+            pattern="^[a-zA-Z'\s]{3,}"
+            title="Must contain only letters, spaces, or apostrophes and be at least 3 characters long."
             onChange={e => setWineInfo({ ...wineInfo, name: e.target.value })}
           />
           <div className="ratings-container">
             <label htmlFor="rating">Rating</label>
-            <div className="stars-container">
-              <FontAwesomeIcon icon={faStar} color="lightgrey" />
-              <FontAwesomeIcon icon={faStar} color="lightgrey" />
-              <FontAwesomeIcon icon={faStar} color="lightgrey" />
-              <FontAwesomeIcon icon={faStar} color="lightgrey" />
-              <FontAwesomeIcon icon={faStar} color="lightgrey" />
-            </div>
+            {renderStars()}
           </div>
         </div>
         <div className="extra-info-container">
@@ -167,6 +167,8 @@ const AddWineForm = () => {
             id="vineyard"
             placeholder="Enter vineyard name"
             value={wineInfo['vineyard']}
+            pattern="^[a-zA-Z'\s]{3,}"
+            title="Must contain only letters, spaces, or apostrophes and be at least 3 characters long."
             onChange={e =>
               setWineInfo({ ...wineInfo, vineyard: e.target.value })
             }
@@ -178,6 +180,8 @@ const AddWineForm = () => {
             id="varietal"
             placeholder="Enter varietal type"
             value={wineInfo['varietal']}
+            pattern="^[a-zA-Z'\s]{3,}"
+            title="Must contain only letters, spaces, or apostrophes and be at least 3 characters long."
             onChange={e =>
               setWineInfo({ ...wineInfo, varietal: e.target.value })
             }
@@ -189,6 +193,8 @@ const AddWineForm = () => {
             id="country"
             placeholder="Enter country wine is made in"
             value={wineInfo['country']}
+            pattern="^[a-zA-Z'\s]{3,}"
+            title="Must contain only letters, spaces, or apostrophes and be at least 3 characters long."
             onChange={e =>
               setWineInfo({ ...wineInfo, country: e.target.value })
             }
@@ -200,6 +206,8 @@ const AddWineForm = () => {
             id="origin"
             placeholder="Enter origin of country wine is made in"
             value={wineInfo['origin']}
+            pattern="^[a-zA-Z'\s]{3,}"
+            title="Must contain only letters, spaces, or apostrophes and be at least 3 characters long."
             onChange={e => setWineInfo({ ...wineInfo, origin: e.target.value })}
           />
           <label htmlFor="review">Review</label>
@@ -209,10 +217,12 @@ const AddWineForm = () => {
             cols="30"
             rows="10"
             value={wineInfo['review']}
-            // onChange={e => setReview(e.target.value)}
+            pattern="^[a-zA-Z'\s]{3,}"
+            title="Must contain only letters, spaces, or apostrophes and be at least 3 characters long."
             onChange={e => setWineInfo({ ...wineInfo, review: e.target.value })}
           ></textarea>
         </div>
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
         <button type="submit">Add Wine</button>
       </form>
     </FormContainer>
@@ -223,14 +233,21 @@ const FormContainer = styled.div`
   max-width: 600px;
   margin: 2rem auto 0 auto;
 
-  h2,
-  h3 {
+  h2 {
+    padding: 1rem 0;
+    margin-bottom: 1rem;
     text-align: center;
+    background: var(--purple);
+    color: var(--white);
   }
 
   h3 {
-    color: var(--maroon);
-    padding: 1.5rem 0;
+    text-align: center;
+    color: var(--purple);
+    border-top: 1px var(--purple) solid;
+    border-bottom: 1px var(--purple) solid;
+    padding: 1rem 0;
+    margin-bottom: 1rem;
   }
 
   .add-wine-form {
@@ -284,16 +301,34 @@ const FormContainer = styled.div`
     width: 1px;
   }
 
-  [type='submit'] {
-    padding: 0.5rem 2rem;
+  button {
+    width: calc(100% - 2rem);
+    padding: 1rem 2rem;
+    margin: 1rem;
     border-radius: 5px;
-    margin-top: 1rem;
+    align-self: center;
     cursor: pointer;
     color: var(--black);
+    font-size: 1.25em;
     font-weight: bold;
     background: var(--lightpurple);
     border: 1px var(--purplegrey) solid;
     transition: all 0.3s ease;
+  }
+
+  .radio-container {
+    display: flex;
+    align-items: center;
+  }
+
+  .radio-container > input {
+    margin: 0 0 0.5rem 0.5rem;
+  }
+
+  .radio-container > label {
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+    padding-left: 1rem;
   }
 
   .info-container,
@@ -304,7 +339,7 @@ const FormContainer = styled.div`
   }
 
   .info-container {
-    border-bottom: 2px var(--grey) solid;
+    padding-bottom: 0;
   }
 
   label {
@@ -330,9 +365,21 @@ const FormContainer = styled.div`
     border-bottom: 1px var(--purple) solid;
   }
 
+  fieldset {
+    margin-bottom: 1rem;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: var(--black);
+    border: 1px var(--grey) solid;
+    border-radius: 5px;
+  }
+
   textarea {
-    border: 1px var(--lightgrey) solid;
+    border: 1px var(--grey) solid;
+    border-radius: 5px;
     background: var(--white);
+    margin: 1rem 0 0 1rem;
+    padding: 0.5rem;
   }
 
   .stars-container {
@@ -340,11 +387,19 @@ const FormContainer = styled.div`
   }
 
   // Error messages
-  .image-error-message {
+  .image-error-message, .error-message {
     color: var(--red);
     font-size: 1.1em;
     font-weight: bold
     padding: 1rem 0;
+  }
+
+  @media (hover: hover) {
+    button:hover {
+      background: var(--verylightgrey);
+      border: 1px var(--purple) solid;
+      color: var(--purple);
+    }
   }
 `;
 
