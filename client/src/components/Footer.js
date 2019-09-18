@@ -1,24 +1,30 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link, withRouter } from 'react-router-dom';
-
-import { ReactComponent as GrapesIcon } from '../assets/wine.svg';
-import { ReactComponent as HomeIcon } from '../assets/home.svg';
-import { ReactComponent as AddIcon } from '../assets/plus.svg';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faHome,
+  faPlusCircle,
+  faWineGlassAlt
+} from '@fortawesome/free-solid-svg-icons';
 
 const Footer = ({ match: { path } }) => {
   return (
     <FooterContainer>
       <nav className="footer-menu">
         <Link to="/" className="link">
-          <HomeIcon className={`link__icon${path === '/' ? ' active' : ''}`} />
+          <FontAwesomeIcon
+            className={`link__icon${path === '/' ? ' active' : ''}`}
+            icon={faHome}
+          />
           <span className={`link__text${path === '/' ? ' active' : ''}`}>
             Home
           </span>
         </Link>
         <Link to="/wines/add" className="link">
-          <AddIcon
+          <FontAwesomeIcon
             className={`link__icon${path === '/wines/add' ? ' active' : ''}`}
+            icon={faPlusCircle}
           />
           <span
             className={`link__text${path === '/wines/add' ? ' active' : ''}`}
@@ -27,8 +33,9 @@ const Footer = ({ match: { path } }) => {
           </span>
         </Link>
         <Link to="/wines/view" className="link">
-          <GrapesIcon
+          <FontAwesomeIcon
             className={`link__icon${path === '/wines/view' ? ' active' : ''}`}
+            icon={faWineGlassAlt}
           />
           <span
             className={`link__text${path === '/wines/view' ? ' active' : ''}`}
@@ -67,21 +74,20 @@ const FooterContainer = styled.footer`
   .link__icon {
     width: 25px;
     height: 25px;
-    fill: var(--black);
-    fill-opacity: 0.7;
+    color: var(--grey);
   }
   
   .link__icon.active {
     width: 25px;
     height: 25px;
-    fill: var(--purple);
-    fill-opacity: 1;
+    color: var(--purple);
   }
   
   .link__text {
     padding-top: 0.35rem
     font-size: 0.9em;
-    opacity: 0.7;
+    font-weight: bold;
+    color: var(--grey);
   }
 
   .link__text.active {
@@ -93,18 +99,9 @@ const FooterContainer = styled.footer`
   }
 
   @media screen and (min-width: 600px) {
-    .footer-menu {
-      height: 70px;
-    }
-
     .link {
       flex-grow: 1;
     }
-
-    // .link__icon {
-    //   width: 35px;
-    //   height: 35px;
-    // }
   }
 `;
 
