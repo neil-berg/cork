@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { animated, useSpring } from 'react-spring';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWineBottle, faStar } from '@fortawesome/free-solid-svg-icons';
@@ -24,6 +25,18 @@ const AddWineForm = () => {
   });
   const [sucessMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+
+  // Animation for the form
+  const animationProps = useSpring({
+    from: {
+      opacity: 0,
+      transform: 'translateY(-20px)'
+    },
+    to: {
+      opacity: 1,
+      transform: 'translateY(0)'
+    }
+  });
 
   const handleChangeImage = async e => {
     const imageFile = e.target.files[0];
@@ -104,7 +117,6 @@ const AddWineForm = () => {
         key={i}
         icon={faStar}
         color={item > wineInfo.rating ? 'lightgrey' : 'orange'}
-        size="2x"
         onClick={() => setWineInfo({ ...wineInfo, rating: item })}
       />
     ));
@@ -113,7 +125,11 @@ const AddWineForm = () => {
 
   return (
     <FormContainer>
-      <form className="add-wine-form" onSubmit={e => handleSubmit(e)}>
+      <animated.form
+        style={animationProps}
+        className="add-wine-form"
+        onSubmit={e => handleSubmit(e)}
+      >
         <h2>Wine Information</h2>
         <h3 style={{ margin: '0 1rem' }}>The Essentials</h3>
         <div className="image-container">
@@ -144,22 +160,22 @@ const AddWineForm = () => {
             id="name"
             placeholder="Enter name of the wine"
             value={wineInfo['name']}
-            pattern="^[a-zA-Z'\s]{3,}"
-            title="Must contain only letters, spaces, or apostrophes and be at least 3 characters long."
+            pattern="^[0-9a-zA-Z'\s]{3,}"
+            title="Must contain only letters, numbers, spaces, or apostrophes and be at least 3 characters long."
             onChange={e => setWineInfo({ ...wineInfo, name: e.target.value })}
           />
           <div className="ratings-container">
             <label htmlFor="rating">Rating</label>
             {renderStars()}
           </div>
-        </div>
-        <div className="extra-info-container">
-          <h3>Additional Details</h3>
           <fieldset>
             <legend>Select type of wine:</legend>
             <div className="wine-type-container">{renderRadioButtons()}</div>
           </fieldset>
+        </div>
 
+        <div className="extra-info-container">
+          <h3>Additional Details</h3>
           <label htmlFor="vineyard">Vineyard</label>
           <input
             type="text"
@@ -224,7 +240,7 @@ const AddWineForm = () => {
         </div>
         {errorMessage && <p className="error-message">{errorMessage}</p>}
         <button type="submit">Add Wine</button>
-      </form>
+      </animated.form>
     </FormContainer>
   );
 };
@@ -236,6 +252,7 @@ const FormContainer = styled.div`
   h2 {
     padding: 1rem 0;
     margin-bottom: 1rem;
+    border-radius: 10px 10px 0 0;
     text-align: center;
     background: var(--purple);
     color: var(--white);
@@ -255,7 +272,7 @@ const FormContainer = styled.div`
     display: flex;
     flex-direction: column;
     border: 1px var(--lightgrey) solid;
-    border-radius: 5px;
+    border-radius: 10px;
     box-shadow: 0px 5px 10px rgba(204, 195, 214, 0.75);
   }
 
@@ -264,18 +281,18 @@ const FormContainer = styled.div`
     flex-direction: column;
     align-items: center;
   }
-
+  
   .image-label {
-    color: var(--purple);
+    color: var(--white);
     font-weight: bold;
   }
-
+  
   .wine-icon-container {
     width: 300px;
     height: 300px;
-    border: 3px var(--lightgrey) solid;
-    border-radius: 5px;
-    background: var(--lightgrey);
+    border: 3px var(--maroon) solid;
+    border-radius: 20px;
+    background: var(--maroon);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -319,10 +336,11 @@ const FormContainer = styled.div`
   .radio-container {
     display: flex;
     align-items: center;
+    height: 30px;
   }
 
   .radio-container > input {
-    margin: 0 0 0.5rem 0.5rem;
+    margin: 0 0 0.35rem 0.5rem;
   }
 
   .radio-container > label {
@@ -366,7 +384,7 @@ const FormContainer = styled.div`
   }
 
   fieldset {
-    margin-bottom: 1rem;
+    margin: 1.5rem 0 0.5rem 0;
     font-size: 1.1em;
     font-weight: bold;
     color: var(--black);
@@ -386,12 +404,16 @@ const FormContainer = styled.div`
     padding: 1rem 0 0 1rem;
   }
 
-  // Error messages
+  .star-icon {
+    font-size: 1.5rem;
+  }
+
   .image-error-message, .error-message {
     color: var(--red);
     font-size: 1.1em;
     font-weight: bold
     padding: 1rem 0;
+    margin-left: 1rem;
   }
 
   @media (hover: hover) {

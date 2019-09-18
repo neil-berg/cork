@@ -19,7 +19,8 @@ router.post('/api/wines/', auth, async (req, res) => {
     await wine.save();
     res.status(201).send(wine);
   } catch (error) {
-    res.status(400).send(e);
+    console.log(error);
+    res.status(400).send(error);
   }
 });
 
