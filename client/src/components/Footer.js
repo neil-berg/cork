@@ -29,7 +29,7 @@ const Footer = ({ match: { path } }) => {
           <span
             className={`link__text${path === '/wines/add' ? ' active' : ''}`}
           >
-            Add Wines
+            Add Wine
           </span>
         </Link>
         <Link to="/wines/view" className="link">
