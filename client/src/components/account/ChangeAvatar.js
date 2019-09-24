@@ -4,7 +4,7 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle } from '@fortawesome/free-regular-svg-icons';
 
-import UserContext from '../context/UserContext';
+import UserContext from '../../context/UserContext';
 
 const ChangeAvatar = () => {
   const [file, setFile] = useState('');

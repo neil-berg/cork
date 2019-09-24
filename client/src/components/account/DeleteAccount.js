@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 
-import UserContext from '../context/UserContext';
+import UserContext from '../../context/UserContext';
 
 const DeleteAccount = ({ history }) => {
   const [errorMessage, setErrorMessage] = useState(null);

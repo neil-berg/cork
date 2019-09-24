@@ -5,10 +5,10 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle } from '@fortawesome/free-regular-svg-icons';
 
-import UserContext from '../context/UserContext';
-import Portal from './Portal';
-import UserMenuModal from './UserMenuModal';
-import AuthModal from './AuthModal';
+import UserContext from '../../context/UserContext';
+import Portal from '../portal/Portal';
+import UserMenuModal from '../modal/UserMenuModal';
+import AuthModal from '../modal/AuthModal';
 
 const Header = () => {
   const [showAuthModal, setShowAuthModal] = useState(false);

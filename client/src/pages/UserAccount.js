@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import Layout from '../components/Layout';
-import ChangeAvatar from '../components/ChangeAvatar';
-import ChangeUserInfo from '../components/ChangeUserInfo';
-import ChangePassword from '../components/ChangePassword';
-import DeleteAccount from '../components/DeleteAccount';
+import Layout from '../components/layout/Layout';
+import ChangeAvatar from '../components/account/ChangeAvatar';
+import ChangeUserInfo from '../components/account/ChangeUserInfo';
+import ChangePassword from '../components/account/ChangePassword';
+import DeleteAccount from '../components/account/DeleteAccount';
 
 const UserAccount = () => {
   return (

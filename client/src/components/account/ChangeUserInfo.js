@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { animated, useSpring } from 'react-spring';
 import axios from 'axios';
 
-import UserContext from '../context/UserContext';
+import UserContext from '../../context/UserContext';
 
 const ChangeUserInfo = () => {
   const [email, setEmail] = useState('');

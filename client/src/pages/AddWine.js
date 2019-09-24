@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 
 import UserContext from '../context/UserContext';
-import Layout from '../components/Layout';
-import AddWineForm from '../components/AddWineForm';
+import Layout from '../components/layout/Layout';
+import AddWineForm from '../components/addwine/AddWineForm';
 
 const AddWine = () => {
   const [user, setUser] = useContext(UserContext);

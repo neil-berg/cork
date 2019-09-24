@@ -5,7 +5,7 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
 
-import UserContext from '../context/UserContext';
+import UserContext from '../../context/UserContext';
 
 const AuthModal = ({ showAuthModal, setShowAuthModal }) => {
   // Local UI state and form values

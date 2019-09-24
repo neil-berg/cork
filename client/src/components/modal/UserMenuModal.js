@@ -7,7 +7,7 @@ import { faUserCircle, faHandPeace } from '@fortawesome/free-regular-svg-icons';
 import { faSlidersH } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 
-import UserContext from '../context/UserContext';
+import UserContext from '../../context/UserContext';
 
 const UserMenuModal = ({
   showUserMenuModal,
@@ -92,9 +92,7 @@ const UserMenuModal = ({
                         {avatarExists ? (
                           <img
                             className="menu__avatar-image"
-                            src={`${process.env.REACT_APP_API_URL}/api/users/${
-                              user._id
-                            }/avatar`}
+                            src={`${process.env.REACT_APP_API_URL}/api/users/${user._id}/avatar`}
                             alt="user avatar"
                           />
                         ) : (

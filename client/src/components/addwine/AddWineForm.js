@@ -3,7 +3,13 @@ import styled from 'styled-components';
 import { animated, useSpring } from 'react-spring';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faWineBottle, faStar } from '@fortawesome/free-solid-svg-icons';
+import {
+  faWineBottle,
+  faStar,
+  faPlus
+} from '@fortawesome/free-solid-svg-icons';
+
+import UploadImage from './UploadImage';
 
 const AddWineForm = () => {
   // State for the image upload
@@ -23,7 +29,7 @@ const AddWineForm = () => {
     origin: '',
     review: 'Enter review here...'
   });
-  const [sucessMessage, setSuccessMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
   // Animation for the form
@@ -38,17 +44,11 @@ const AddWineForm = () => {
     }
   });
 
-  const handleChangeImage = async e => {
-    const imageFile = e.target.files[0];
-    if (imageFile.size > 15000000) {
-      setImageErrorMessage('File size must be less than 15 MB.');
-    } else if (/^(jpeg|jpg|png)$/.test(imageFile.type)) {
-      setImageErrorMessage('Files must be JPEG, JPG, or PNG.');
-    } else {
-      setFile(imageFile);
-      setFilename(imageFile.name);
-    }
-  };
+  //
+  const successAnimation = useSpring({
+    opacity: successMessage ? 1 : 0,
+    transform: successMessage ? `translateY(0)` : `translateY(-20px)`
+  });
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -84,7 +84,16 @@ const AddWineForm = () => {
       });
 
       setSuccessMessage('Added new wine!');
-      console.log('submitted new wine!');
+      // Clear wine information state
+      Object.keys(wineInfo).forEach(
+        key => (wineInfo[key] = key !== 'rating' ? '' : 0)
+      );
+      setFile('');
+      setFilename('Select Image of Wine');
+      // Remove sucess message after 3 seconds
+      setTimeout(() => {
+        setSuccessMessage('');
+      }, 3000);
     } catch (error) {
       setErrorMessage('Error adding new wine. Please try again.');
       console.log(error);
@@ -131,26 +140,12 @@ const AddWineForm = () => {
         onSubmit={e => handleSubmit(e)}
       >
         <h2>Wine Information</h2>
-        <h3 style={{ margin: '0 1rem' }}>The Essentials</h3>
-        <div className="image-container">
-          <div className="wine-icon-container">
-            <FontAwesomeIcon className="wine-icon" icon={faWineBottle} />
-            <input
-              className="file-input"
-              type="file"
-              name="image"
-              id="image"
-              accept="image/png, image/jpeg, image/jpg"
-              onChange={e => handleChangeImage(e)}
-            />
-            {imageErrorMessage && (
-              <p className="image-error-message">{imageErrorMessage}</p>
-            )}
-            <label className="image-label" htmlFor="image">
-              {filename}
-            </label>
-          </div>
-        </div>
+        <UploadImage
+          setFile={setFile}
+          filename={filename}
+          setFilename={setFilename}
+        />
+
         <div className="info-container">
           <label htmlFor="name">Name</label>
           <input
@@ -176,6 +171,7 @@ const AddWineForm = () => {
 
         <div className="extra-info-container">
           <h3>Additional Details</h3>
+
           <label htmlFor="vineyard">Vineyard</label>
           <input
             type="text"
@@ -238,6 +234,11 @@ const AddWineForm = () => {
             onChange={e => setWineInfo({ ...wineInfo, review: e.target.value })}
           ></textarea>
         </div>
+        {successMessage && (
+          <animated.p className="success-message" style={successAnimation}>
+            {successMessage}
+          </animated.p>
+        )}
         {errorMessage && <p className="error-message">{errorMessage}</p>}
         <button type="submit">Add Wine</button>
       </animated.form>
@@ -248,6 +249,7 @@ const AddWineForm = () => {
 const FormContainer = styled.div`
   max-width: 600px;
   margin: 2rem auto 0 auto;
+  transition: width 0.3s ease;
 
   h2 {
     padding: 1rem 0;
@@ -276,49 +278,7 @@ const FormContainer = styled.div`
     box-shadow: 0px 5px 10px rgba(204, 195, 214, 0.75);
   }
 
-  .image-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .image-label {
-    color: var(--white);
-    font-weight: bold;
-  }
-  
-  .wine-icon-container {
-    width: 300px;
-    height: 300px;
-    border: 3px var(--maroon) solid;
-    border-radius: 20px;
-    background: var(--maroon);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
-    margin-top: 1.25rem;
-  }
-
-  .wine-icon {
-    width: 180px;
-    height: 280px;
-    color: var(--grey);
-  }
-
-  [type='file'] {
-    border: 0;
-    clip: rect(0, 0, 0, 0);
-    height: 1px;
-    overflow: hidden;
-    padding: 0;
-    position: absolute;
-    white-space: nowrap;
-    width: 1px;
-  }
-
-  button {
+  button[type='submit'] {
     width: calc(100% - 2rem);
     padding: 1rem 2rem;
     margin: 1rem;
@@ -414,6 +374,17 @@ const FormContainer = styled.div`
     font-weight: bold
     padding: 1rem 0;
     margin-left: 1rem;
+  }
+
+  .success-message {
+    background: var(--green);
+    color: var(--white);
+    font-weight: bold;
+    font-size: 1.25rem;
+    padding: 1rem;
+    margin: 1rem;
+    text-align: center;
+    border-radius: 5px;
   }
 
   @media (hover: hover) {
