@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 
-import Layout from '../components/layout/Layout';
 import Loading from '../components/loading/Loading';
 import Error from '../components/error/Error';
 import WineCard from '../components/card/WineCard';
@@ -45,26 +44,14 @@ const Home = () => {
   };
 
   if (loading) {
-    return (
-      <Layout>
-        <Loading />
-      </Layout>
-    );
+    return <Loading />;
   }
 
   if (error) {
-    return (
-      <Layout>
-        <Error />
-      </Layout>
-    );
+    return <Error />;
   }
 
-  return (
-    <Layout>
-      <WineList>{renderWines()}</WineList>
-    </Layout>
-  );
+  return <WineList>{renderWines()}</WineList>;
 };
 
 const WineList = styled.ul`

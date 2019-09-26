@@ -104,7 +104,11 @@ const UserMenuModal = ({
                         <p className="menu__username">{user.username}</p>
                         <p className="menu__email">{user.email}</p>
                       </Link>
-                      <Link to="/account" className="menu__link">
+                      <Link
+                        to="/account"
+                        className="menu__link"
+                        onClick={() => setShowUserMenuModal(false)}
+                      >
                         <FontAwesomeIcon
                           className="menu__icon-settings"
                           icon={faSlidersH}

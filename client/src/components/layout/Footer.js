@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link, withRouter } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faHome,
@@ -8,37 +8,52 @@ import {
   faWineGlassAlt
 } from '@fortawesome/free-solid-svg-icons';
 
-const Footer = ({ match: { path } }) => {
+const Footer = () => {
+  const location = useLocation();
   return (
     <FooterContainer>
       <nav className="footer-menu">
         <Link to="/" className="link">
           <FontAwesomeIcon
-            className={`link__icon${path === '/' ? ' active' : ''}`}
+            className={`link__icon${
+              location.pathname === '/' ? ' active' : ''
+            }`}
             icon={faHome}
           />
-          <span className={`link__text${path === '/' ? ' active' : ''}`}>
+          <span
+            className={`link__text${
+              location.pathname === '/' ? ' active' : ''
+            }`}
+          >
             Home
           </span>
         </Link>
         <Link to="/wines/add" className="link">
           <FontAwesomeIcon
-            className={`link__icon${path === '/wines/add' ? ' active' : ''}`}
+            className={`link__icon${
+              location.pathname === '/wines/add' ? ' active' : ''
+            }`}
             icon={faPlusCircle}
           />
           <span
-            className={`link__text${path === '/wines/add' ? ' active' : ''}`}
+            className={`link__text${
+              location.pathname === '/wines/add' ? ' active' : ''
+            }`}
           >
             Add Wine
           </span>
         </Link>
         <Link to="/wines/view" className="link">
           <FontAwesomeIcon
-            className={`link__icon${path === '/wines/view' ? ' active' : ''}`}
+            className={`link__icon${
+              location.pathname === '/wines/view' ? ' active' : ''
+            }`}
             icon={faWineGlassAlt}
           />
           <span
-            className={`link__text${path === '/wines/view' ? ' active' : ''}`}
+            className={`link__text${
+              location.pathname === '/wines/view' ? ' active' : ''
+            }`}
           >
             My Wines
           </span>
@@ -105,4 +120,4 @@ const FooterContainer = styled.footer`
   }
 `;
 
-export default withRouter(Footer);
+export default Footer;

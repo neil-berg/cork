@@ -3,11 +3,14 @@ import { Route, Switch } from 'react-router';
 import axios from 'axios';
 
 import UserContext from './context/UserContext';
+import Header from './components/layout/Header';
+import Footer from './components/layout/Footer';
 import Home from './pages/Home';
 import AddWine from './pages/AddWine';
 import MyWines from './pages/MyWines';
 import UserAccount from './pages/UserAccount';
 import NotFound from './pages/NotFound';
+import './styles/Layout.css';
 
 const App = () => {
   const [user, setUser] = useState({});
@@ -42,13 +45,25 @@ const App = () => {
   return (
     <div>
       <UserContext.Provider value={[user, setUser]}>
+        <Header />
         <Switch>
-          <Route exact path="/" component={Home} />
-          <Route path="/wines/add" component={AddWine} />
-          <Route path="/wines/view" component={MyWines} />
-          <Route path="/account" component={UserAccount} />
-          <Route component={NotFound} />
+          <Route exact path="/">
+            <Home />
+          </Route>
+          <Route path="/wines/add">
+            <AddWine />
+          </Route>
+          <Route path="/wines/view">
+            <MyWines />
+          </Route>
+          <Route path="/account">
+            <UserAccount />
+          </Route>
+          <Route>
+            <NotFound />
+          </Route>
         </Switch>
+        <Footer />
       </UserContext.Provider>
     </div>
   );

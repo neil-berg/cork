@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import Layout from '../components/layout/Layout';
 import ChangeAvatar from '../components/account/ChangeAvatar';
 import ChangeUserInfo from '../components/account/ChangeUserInfo';
 import ChangePassword from '../components/account/ChangePassword';
@@ -9,23 +8,21 @@ import DeleteAccount from '../components/account/DeleteAccount';
 
 const UserAccount = () => {
   return (
-    <Layout>
-      <Container>
-        <div className="profile">
-          <h2>Profile</h2>
-          <ChangeAvatar />
-          <ChangeUserInfo />
-        </div>
-        <div className="password">
-          <h2>Password</h2>
-          <ChangePassword />
-        </div>
-        <div className="delete-account">
-          <h2>Delete Account</h2>
-          <DeleteAccount />
-        </div>
-      </Container>
-    </Layout>
+    <Container>
+      <div className="profile">
+        <h2>Profile</h2>
+        <ChangeAvatar />
+        <ChangeUserInfo />
+      </div>
+      <div className="password">
+        <h2>Password</h2>
+        <ChangePassword />
+      </div>
+      <div className="delete-account">
+        <h2>Delete Account</h2>
+        <DeleteAccount />
+      </div>
+    </Container>
   );
 };
 
