@@ -17,8 +17,6 @@ const Header = () => {
 
   const [user, setUser] = useContext(UserContext);
 
-  console.count('header rendered');
-
   // Display avatar if user avatar exists
   useEffect(() => {
     const fetchUserDetails = async () => {

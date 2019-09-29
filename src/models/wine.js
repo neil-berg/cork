@@ -19,12 +19,12 @@ const wineSchema = new mongoose.Schema(
       max: 5,
       required: true
     },
-    winetype: {
+    type: {
       type: String,
       trim: true,
       lowercase: true,
       required: true,
-      enum: ['red', 'white', 'rose', 'orange', 'sparkling']
+      enum: ['red', 'white', 'rosé', 'orange', 'dessert', 'sparkling']
     },
     varietal: {
       type: String,
