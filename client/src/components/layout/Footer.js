@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useHistory } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faHome,
@@ -8,58 +8,83 @@ import {
   faWineGlassAlt
 } from '@fortawesome/free-solid-svg-icons';
 
+import UserContext from '../../context/UserContext';
+import Portal from '../../components/portal/Portal';
+import AuthModal from '../../components/modal/AuthModal';
+
 const Footer = () => {
   const location = useLocation();
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [user, setUser] = useContext(UserContext);
+
   return (
-    <FooterContainer>
-      <nav className="footer-menu">
-        <Link to="/" className="link">
-          <FontAwesomeIcon
-            className={`link__icon${
-              location.pathname === '/' ? ' active' : ''
-            }`}
-            icon={faHome}
-          />
-          <span
-            className={`link__text${
-              location.pathname === '/' ? ' active' : ''
-            }`}
+    <>
+      <FooterContainer>
+        <nav className="footer-menu">
+          <Link to="/" className="link">
+            <FontAwesomeIcon
+              className={`link__icon${
+                location.pathname === '/' ? ' active' : ''
+              }`}
+              icon={faHome}
+            />
+            <span
+              className={`link__text${
+                location.pathname === '/' ? ' active' : ''
+              }`}
+            >
+              Home
+            </span>
+          </Link>
+
+          <Link
+            to={user.isLoggedIn ? '/wines/add' : '/'}
+            className="link"
+            onClick={() => (user.isLoggedIn ? null : setShowAuthModal(true))}
           >
-            Home
-          </span>
-        </Link>
-        <Link to="/wines/add" className="link">
-          <FontAwesomeIcon
-            className={`link__icon${
-              location.pathname === '/wines/add' ? ' active' : ''
-            }`}
-            icon={faPlusCircle}
-          />
-          <span
-            className={`link__text${
-              location.pathname === '/wines/add' ? ' active' : ''
-            }`}
+            <FontAwesomeIcon
+              className={`link__icon${
+                location.pathname === '/wines/add' ? ' active' : ''
+              }`}
+              icon={faPlusCircle}
+            />
+            <span
+              className={`link__text${
+                location.pathname === '/wines/add' ? ' active' : ''
+              }`}
+            >
+              Add Wine
+            </span>
+          </Link>
+
+          <Link
+            to={user.isLoggedIn ? '/wines/view' : '/'}
+            className="link"
+            onClick={() => (user.isLoggedIn ? null : setShowAuthModal(true))}
           >
-            Add Wine
-          </span>
-        </Link>
-        <Link to="/wines/view" className="link">
-          <FontAwesomeIcon
-            className={`link__icon${
-              location.pathname === '/wines/view' ? ' active' : ''
-            }`}
-            icon={faWineGlassAlt}
-          />
-          <span
-            className={`link__text${
-              location.pathname === '/wines/view' ? ' active' : ''
-            }`}
-          >
-            My Wines
-          </span>
-        </Link>
-      </nav>
-    </FooterContainer>
+            <FontAwesomeIcon
+              className={`link__icon${
+                location.pathname === '/wines/view' ? ' active' : ''
+              }`}
+              icon={faWineGlassAlt}
+            />
+            <span
+              className={`link__text${
+                location.pathname === '/wines/view' ? ' active' : ''
+              }`}
+            >
+              My Wines
+            </span>
+          </Link>
+        </nav>
+      </FooterContainer>
+      <Portal>
+        <AuthModal
+          showAuthModal={showAuthModal}
+          setShowAuthModal={setShowAuthModal}
+        />
+      </Portal>
+    </>
   );
 };
 

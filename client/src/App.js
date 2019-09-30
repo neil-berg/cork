@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Route, Switch } from 'react-router';
+import { Route, Switch, Redirect } from 'react-router';
 import axios from 'axios';
 
 import UserContext from './context/UserContext';
@@ -10,6 +10,7 @@ import AddWine from './pages/AddWine';
 import MyWines from './pages/MyWines';
 import UserAccount from './pages/UserAccount';
 import NotFound from './pages/NotFound';
+
 import './styles/Layout.css';
 
 const App = () => {
