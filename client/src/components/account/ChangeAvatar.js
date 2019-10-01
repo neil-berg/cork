@@ -105,6 +105,7 @@ const ChangeAvatar = () => {
 
 const AvatarContainer = styled.div`
   .avatar-container {
+    padding-top: 2rem;
     display: flex;
     flex-direction: column;
     align-items: center;

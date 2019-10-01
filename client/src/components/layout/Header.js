@@ -103,8 +103,8 @@ const HeaderContainer = styled.header`
   }
 
   .avatar-image {
-    width: 35px;
-    height: 35px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     border: 1px var(--lightpurple) solid;
     cursor: pointer;

@@ -53,7 +53,7 @@ router.post(
   upload.single('avatar'),
   async (req, res) => {
     const buffer = await sharp(req.file.buffer)
-      .resize({ width: 200, height: 200 })
+      .resize({ width: 100, height: 100 })
       .jpeg()
       .toBuffer();
 

@@ -56,7 +56,7 @@ const Home = () => {
 
 const WineList = styled.ul`
   display: grid;
-  grid-template-columns: repeat(auto-fit, 200px);
+  grid-template-columns: repeat(auto-fit, 350px);
   grid-gap: 1rem;
   justify-content: center;
   margin-bottom: 100px;
