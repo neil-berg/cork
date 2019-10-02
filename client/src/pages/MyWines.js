@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 import Loading from '../components/loading/Loading';
 import Error from '../components/error/Error';
 import WineCard from '../components/card/WineCard';
+import { ReactComponent as WineBottles } from '../assets/cheers.svg';
 
 const MyWines = () => {
   // Fetch latest 20 wines in the DB
@@ -47,12 +48,12 @@ const MyWines = () => {
     ));
   };
 
-  // TODO: Build out no wines component
   const noWines = () => {
     return (
-      <div>
-        <h1>No Wines Yet</h1>
-      </div>
+      <EmptyContainer>
+        <WineBottles className="icon" />
+        <p>Add some wines!</p>
+      </EmptyContainer>
     );
   };
 
@@ -64,7 +65,7 @@ const MyWines = () => {
     return <Error />;
   }
 
-  return <WineList>{wines.length > 0 ? renderWines() : noWines()}</WineList>;
+  return wines.length > 0 ? <WineList>{renderWines()}</WineList> : noWines();
 };
 
 const WineList = styled.ul`
@@ -73,6 +74,36 @@ const WineList = styled.ul`
   grid-gap: 1rem;
   justify-content: center;
   margin-bottom: 100px;
+`;
+
+const ColorAnimation = keyframes`
+  0% { color: var(--lightpurple)}
+  50% { color: var(--purple) }
+  100% { color: var(--lightpurple) }
+`;
+
+const EmptyContainer = styled.div`
+  height: calc(100vh - 130px);
+  min-width: 80vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  .icon {
+    max-width: 350px;
+
+    circle {
+      fill: var(--maroon) !important;
+    }
+  }
+
+  p {
+    font-size: 2em;
+    animation: ${ColorAnimation} 2s linear infinite;
+    padding: 1rem;
+    margin: 0 auto;
+  }
 `;
 
 export default MyWines;
