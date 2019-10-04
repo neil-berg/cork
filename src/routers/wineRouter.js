@@ -41,7 +41,14 @@ router.post(
 
       // If wine exists, add its image as a buffer
       const buffer = await sharp(req.file.buffer)
-        .resize({ width: 350, height: 350 })
+        .resize({
+          width: 400,
+          height: 400,
+          options: {
+            fit: 'cover'
+          }
+        })
+        .rotate()
         .jpeg()
         .toBuffer();
 

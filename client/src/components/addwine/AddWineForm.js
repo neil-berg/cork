@@ -48,6 +48,7 @@ const AddWineForm = () => {
 
   const handleSubmit = async e => {
     e.preventDefault();
+    setErrorMessage('');
 
     // Need an image before submission
     if (filename === 'Select Image of Wine') {

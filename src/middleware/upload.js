@@ -2,10 +2,10 @@ const multer = require('multer');
 
 const upload = multer({
   limits: {
-    fileSize: 100000
+    fileSize: 15000000 // 15 MB
   },
   fileFilter(req, file, cb) {
-    if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+    if (!file.originalname.toLowerCase().match(/\.(jpg|jpeg|png)$/)) {
       return cb(new Error('Only JPG, JPEG, and PNG files are allowed'));
     }
 

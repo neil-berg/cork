@@ -41,11 +41,7 @@ const MyWines = () => {
   }, []);
 
   const renderWines = () => {
-    return wines.map(wine => (
-      <li key={wine._id}>
-        <WineCard wine={wine} />
-      </li>
-    ));
+    return wines.map(wine => <WineCard key={wine._id} wine={wine} />);
   };
 
   const noWines = () => {
@@ -68,10 +64,10 @@ const MyWines = () => {
   return wines.length > 0 ? <WineList>{renderWines()}</WineList> : noWines();
 };
 
-const WineList = styled.ul`
+const WineList = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, 350px);
-  grid-gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(1fr, 400px));
+  // grid-gap: 1rem;
   justify-content: center;
   margin-bottom: 100px;
 `;
