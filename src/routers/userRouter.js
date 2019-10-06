@@ -143,7 +143,12 @@ router.patch('/api/users/me', auth, async (req, res) => {
 
     const propertiesToUpdate = Object.keys(req.body);
     propertiesToUpdate.forEach(property => {
-      req.user[property] = req.body[property];
+      if (property !== 'likedWine') {
+        req.user[property] = req.body[property];
+      } else {
+        const likedWine = req.body.likedWine;
+        req.user.likedWines = req.user.likedWines.concat({ _id: likedWine });
+      }
     });
     await req.user.save();
     res.send(req.user);

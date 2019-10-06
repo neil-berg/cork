@@ -3,10 +3,22 @@ const mongoose = require('mongoose');
 const wineSchema = new mongoose.Schema(
   {
     owner: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      ref: 'User'
+      _id: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'User'
+      },
+      username: {
+        type: String,
+        required: true,
+        ref: 'User'
+      }
     },
+    // owner: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   required: true,
+    //   ref: 'User'
+    // },
     name: {
       type: String,
       required: true,

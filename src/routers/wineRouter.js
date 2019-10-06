@@ -13,7 +13,10 @@ const router = new express.Router();
 router.post('/api/wines/', auth, async (req, res) => {
   const wine = new Wine({
     ...req.body,
-    owner: req.user._id
+    owner: {
+      _id: req.user._id,
+      username: req.user.username
+    }
   });
   try {
     await wine.save();
@@ -34,7 +37,10 @@ router.post(
   async (req, res) => {
     const _id = req.params.id;
     try {
-      const wine = await Wine.findOne({ _id, owner: req.user._id });
+      const wine = await Wine.findOne({
+        _id,
+        'owner._id': req.user._id
+      });
       if (!wine) {
         return res.status(404).send();
       }
@@ -102,7 +108,7 @@ router.get('/api/wines/mine', auth, async (req, res) => {
   }
 
   try {
-    const wines = await Wine.find({ owner: req.user._id }, null, {
+    const wines = await Wine.find({ 'owner._id': req.user._id }, null, {
       sort: sortOptions
     });
 
@@ -122,7 +128,7 @@ router.get('/api/wines/:id', auth, async (req, res) => {
   const _id = req.params.id;
   try {
     // Ensure this wine's owner is the authenticated user
-    const wine = await Wine.findOne({ _id, owner: req.user._id });
+    const wine = await Wine.findOne({ _id, 'owner._id': req.user._id });
 
     if (!wine) {
       return res.status(404).send();
@@ -156,7 +162,7 @@ router.get('/api/wines/:id/image', async (req, res) => {
 router.patch('/api/wines/:id', auth, async (req, res) => {
   const _id = req.params.id;
   try {
-    const wine = await Wine.findOne({ _id, owner: req.user._id });
+    const wine = await Wine.findOne({ _id, 'owner._id': req.user._id });
     const propertiesToUpdate = Object.keys(req.body);
     propertiesToUpdate.forEach(property => {
       wine[property] = req.body[property];
@@ -176,7 +182,7 @@ router.delete('/api/wines/:id', auth, async (req, res) => {
     // Locate wine by its id and owner id
     const wine = await Wine.findOneAndDelete({
       _id: req.params.id,
-      owner: req.user._id
+      'owner._id': req.user._id
     });
 
     if (!wine) {

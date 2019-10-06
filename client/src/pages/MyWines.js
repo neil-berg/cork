@@ -66,10 +66,15 @@ const MyWines = () => {
 
 const WineList = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(1fr, 400px));
-  // grid-gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  justify-items: center;
   justify-content: center;
+  margin-top: 1rem;
   margin-bottom: 100px;
+
+  @media screen and (min-width: 450px) {
+    grid-gap: 1rem;
+  }
 `;
 
 const ColorAnimation = keyframes`

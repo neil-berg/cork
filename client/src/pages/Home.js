@@ -53,10 +53,14 @@ const Home = () => {
 const WineList = styled.ul`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  // grid-gap: 1rem;
   justify-items: center;
   justify-content: center;
+  margin-top: 1rem;
   margin-bottom: 100px;
+
+  @media screen and (min-width: 450px) {
+    grid-gap: 1rem;
+  }
 `;
 
 export default Home;

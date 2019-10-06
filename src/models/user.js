@@ -37,6 +37,14 @@ const userSchema = new mongoose.Schema(
           required: true
         }
       }
+    ],
+    likedWines: [
+      {
+        _id: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Wine'
+        }
+      }
     ]
   },
   {
