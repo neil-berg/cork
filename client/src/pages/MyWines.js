@@ -20,7 +20,7 @@ const MyWines = () => {
       // setError(false);
       try {
         setLoading(true);
-        const res = await axios.get('/api/wines/mine', {
+        const { data: wines } = await axios.get('/api/wines/mine', {
           params: {
             limit: 20,
             skip: 0,
@@ -30,7 +30,22 @@ const MyWines = () => {
             Authorization: `Bearer ${token}`
           }
         });
-        setWines(res.data);
+
+        const { data } = await axios.get('/api/users/me', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        const likedWines = data.likedWines.map(item => item._id);
+
+        // Append new boolean prop 'likedByUser' if wine id's match
+        wines.map(wine =>
+          likedWines.includes(wine._id)
+            ? Object.assign(wine, { likedByUser: true })
+            : Object.assign(wine, { likedByUser: false })
+        );
+
+        setWines(wines);
         setLoading(false);
       } catch (error) {
         setLoading(true);

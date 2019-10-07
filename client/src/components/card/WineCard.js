@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import styled from 'styled-components';
 import { animated, useSpring } from 'react-spring';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -15,6 +15,14 @@ const WineCard = ({ wine }) => {
   const [user, setUser] = useContext(UserContext);
 
   const [showPopup, setShowPopup] = useState(false);
+  const [likes, setLikes] = useState(null);
+  const [isLikedByUser, setIsLikedByUser] = useState(null);
+
+  // On first mount, sync numLikes and likedByUser to values in the DB
+  useEffect(() => {
+    setLikes(wine.likes);
+    setIsLikedByUser(wine.likedByUser);
+  }, [wine.likes, wine.likedByUser]);
 
   const popupAnimation = useSpring({
     opacity: showPopup ? 1 : 0,
@@ -38,17 +46,17 @@ const WineCard = ({ wine }) => {
   };
 
   const handleLikeClick = async () => {
-    // console.log('do something to likes');
-    // console.log(wine);
+    // UI changes only: toggle empty/full heart and increment/decrement likes
+    isLikedByUser ? setLikes(likes - 1) : setLikes(likes + 1);
+    setIsLikedByUser(!isLikedByUser);
 
-    // Add this wine to the user's likedWines array
+    // Then add/remove this wine in a user's liked wines
+    // and add/subtract from this wine's likes
     try {
       const token = localStorage.getItem('cork-token');
       await axios.patch(
-        '/api/users/me',
-        {
-          likedWine: wine._id
-        },
+        '/api/users/me/likes',
+        { _id: wine._id },
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -75,8 +83,8 @@ const WineCard = ({ wine }) => {
           <div className="likes-container">
             {user.isLoggedIn ? (
               <FontAwesomeIcon
-                icon={fullHeart}
-                className="full-heart"
+                icon={isLikedByUser ? fullHeart : emptyHeart}
+                className={isLikedByUser ? 'full-heart' : 'empty-heart'}
                 onClick={() => handleLikeClick()}
               />
             ) : (
@@ -86,7 +94,7 @@ const WineCard = ({ wine }) => {
                 onClick={() => handlePopupClick()}
               />
             )}
-            <span className="num-likes">{wine.likes}</span>
+            <span className="num-likes">{likes}</span>
             {showPopup && (
               <animated.p style={popupAnimation} className="popup">
                 Login or sign up to like wines!

@@ -3,6 +3,7 @@ const sharp = require('sharp');
 const bcrypt = require('bcryptjs');
 
 const User = require('../models/user');
+const Wine = require('../models/wine');
 const auth = require('../middleware/auth');
 const upload = require('../middleware/upload');
 
@@ -143,15 +144,40 @@ router.patch('/api/users/me', auth, async (req, res) => {
 
     const propertiesToUpdate = Object.keys(req.body);
     propertiesToUpdate.forEach(property => {
-      if (property !== 'likedWine') {
-        req.user[property] = req.body[property];
-      } else {
-        const likedWine = req.body.likedWine;
-        req.user.likedWines = req.user.likedWines.concat({ _id: likedWine });
-      }
+      req.user[property] = req.body[property];
     });
     await req.user.save();
     res.send(req.user);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+});
+
+// PATCH /api/users/me/likes
+//
+// Update user's liked wines and wine's number of likes
+router.patch('/api/users/me/likes', auth, async (req, res) => {
+  try {
+    // Parse the incoming liked wine _id
+    const _id = req.body._id;
+    const wine = await Wine.findById(_id);
+
+    // If the liked id already exists, the user is un-liking it,
+    // so remove that liked wine from their array and also
+    // decrease the number of likes for that wine by one.
+    // Otherwise, concat that wine to the users list and increment likes.
+    const likedIds = req.user.likedWines.map(wine => wine._id);
+    if (likedIds.includes(_id)) {
+      req.user.likedWines = req.user.likedWines.filter(
+        wine => !wine._id.equals(_id)
+      );
+      wine.likes = wine.likes - 1;
+    } else {
+      req.user.likedWines = req.user.likedWines.concat({ _id });
+      wine.likes = wine.likes + 1;
+    }
+    await req.user.save();
+    await wine.save();
   } catch (error) {
     res.status(400).send(error);
   }
