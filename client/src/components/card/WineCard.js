@@ -8,6 +8,7 @@ import {
   faStar
 } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
+import moment from 'moment';
 
 import UserContext from '../../context/UserContext';
 
@@ -72,7 +73,7 @@ const WineCard = ({ wine }) => {
     <Card>
       <div className="header">
         <span>{wine.owner.username}</span>
-        <span>3h</span>
+        <span>{moment(wine.createdAt).fromNow()}</span>
       </div>
       <img
         src={process.env.REACT_APP_API_URL + `/api/wines/${wine._id}/image`}

@@ -36,9 +36,9 @@ const MyWines = () => {
             Authorization: `Bearer ${token}`
           }
         });
-        const likedWines = data.likedWines.map(item => item._id);
 
         // Append new boolean prop 'likedByUser' if wine id's match
+        const likedWines = data.likedWines;
         wines.map(wine =>
           likedWines.includes(wine._id)
             ? Object.assign(wine, { likedByUser: true })
@@ -53,6 +53,24 @@ const MyWines = () => {
       }
     };
     fetchAllWines();
+  }, []);
+
+  // // Fetch likedWines
+  useEffect(() => {
+    const token = localStorage.getItem('cork-token');
+    const fetchLikedWines = async () => {
+      try {
+        const data = await axios.get('/api/users/me/likes', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        //console.log(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchLikedWines();
   }, []);
 
   const renderWines = () => {

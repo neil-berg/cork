@@ -40,9 +40,9 @@ const Home = () => {
               Authorization: `Bearer ${token}`
             }
           });
-          const likedWines = data.likedWines.map(item => item._id);
 
           // Append new boolean prop 'likedByUser' if wine id's match
+          const likedWines = data.likedWines;
           wines.map(wine =>
             likedWines.includes(wine._id)
               ? Object.assign(wine, { likedByUser: true })

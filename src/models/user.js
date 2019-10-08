@@ -40,10 +40,8 @@ const userSchema = new mongoose.Schema(
     ],
     likedWines: [
       {
-        _id: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'Wine'
-        }
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Wine'
       }
     ]
   },

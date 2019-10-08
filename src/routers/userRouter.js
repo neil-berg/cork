@@ -120,6 +120,18 @@ router.get('/api/users/:id/avatar', async (req, res) => {
   }
 });
 
+// GET /api/users/me/likes
+//
+// Read all liked wines for a user
+router.get('/api/users/me/likes', auth, async (req, res) => {
+  try {
+    await req.user.populate('likedWines').execPopulate();
+    res.send(req.user.likedWines);
+  } catch (error) {
+    res.status(500).send();
+  }
+});
+
 // PATCH /api/users/me
 //
 // Update information for authenticated user
@@ -166,14 +178,14 @@ router.patch('/api/users/me/likes', auth, async (req, res) => {
     // so remove that liked wine from their array and also
     // decrease the number of likes for that wine by one.
     // Otherwise, concat that wine to the users list and increment likes.
-    const likedIds = req.user.likedWines.map(wine => wine._id);
+    const likedIds = req.user.likedWines;
     if (likedIds.includes(_id)) {
       req.user.likedWines = req.user.likedWines.filter(
         wine => !wine._id.equals(_id)
       );
       wine.likes = wine.likes - 1;
     } else {
-      req.user.likedWines = req.user.likedWines.concat({ _id });
+      req.user.likedWines = req.user.likedWines.concat(_id);
       wine.likes = wine.likes + 1;
     }
     await req.user.save();
