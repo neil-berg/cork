@@ -7,11 +7,6 @@ const wineRouter = require('./routers/wineRouter');
 
 const app = express();
 
-if (process.env.SEED) {
-  const seedUsers = require('./seeds/test');
-  seedUsers();
-}
-
 app.use(express.json());
 app.use(userRouter);
 app.use(wineRouter);

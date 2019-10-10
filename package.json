@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev:seed": "env-cmd -f ./config/dev.seed.env nodemon src/index.js",
+    "seed-db": "env-cmd -f ./config/dev.env node src/seeds/test.js",
     "dev": "env-cmd -f ./config/dev.env nodemon src/index.js",
     "start": "node src/index.js",
     "heroku-postbuild": "cd client && npm install && npm run build"
