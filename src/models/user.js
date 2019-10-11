@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
+const Wine = require('./wine');
+
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -102,6 +104,13 @@ userSchema.pre('save', async function(next) {
     user.password = await bcrypt.hash(user.password, 8);
   }
 
+  next();
+});
+
+// Remove wines owned by this user if account is deleted
+userSchema.pre('remove', async function(next) {
+  const user = this;
+  await Wine.deleteMany({ owner: user._id });
   next();
 });
 

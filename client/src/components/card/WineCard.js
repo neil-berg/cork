@@ -95,7 +95,9 @@ const WineCard = ({ wine }) => {
                 onClick={() => handlePopupClick()}
               />
             )}
-            <span className="num-likes">{likes}</span>
+            <span className="num-likes">
+              {Number(likes).toLocaleString('en-US')}
+            </span>
             {showPopup && (
               <animated.p style={popupAnimation} className="popup">
                 Login or sign up to like wines!
