@@ -79,6 +79,10 @@ router.get('/api/wines/all', async (req, res) => {
   };
 
   try {
+    // Determine total number of wines in the DB
+    const totalCount = await Wine.find({}).countDocuments();
+
+    // Query a subset of wines
     const wines = await Wine.find(null, null, allOptions).populate(
       'owner',
       'username'
@@ -86,7 +90,7 @@ router.get('/api/wines/all', async (req, res) => {
     if (!wines) {
       return res.status(404).send();
     }
-    res.send(wines);
+    res.send({ wines, totalCount });
   } catch (error) {
     res.status(500).send();
   }

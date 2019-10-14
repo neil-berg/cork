@@ -49,6 +49,9 @@ const App = () => {
         <Header />
         <Switch>
           <Route exact path="/">
+            <Redirect to="/1" />
+          </Route>
+          <Route exact path="/:page">
             <Home />
           </Route>
           <Route path="/wines/add">

@@ -7,6 +7,7 @@ const User = require('../models/user');
 const Wine = require('../models/wine');
 
 const seedDatabase = async (numUsers = 3, numWines = 5) => {
+  let totalCount = 0;
   let userCount = 0;
   while (userCount < numUsers) {
     // Create a sample user
@@ -31,13 +32,14 @@ const seedDatabase = async (numUsers = 3, numWines = 5) => {
     const user = new User(sampleUser);
     await user.save();
     userCount++;
+    totalCount++;
 
     // Attach n wines to this user
     let wineCount = 0;
     while (wineCount < numWines) {
       const sampleWine = {
         owner: user._id,
-        name: faker.commerce.productName(),
+        name: `${faker.commerce.productName()}-${totalCount}`,
         type: 'red',
         rating: Math.floor(Math.random() * 6),
         likes: Math.floor(Math.random() * 100000),
@@ -63,10 +65,11 @@ const seedDatabase = async (numUsers = 3, numWines = 5) => {
       const wine = new Wine(sampleWine);
       await wine.save();
       wineCount++;
+      totalCount++;
     }
   }
 };
 
-seedDatabase(3, 5)
+seedDatabase(3, 10)
   .then(() => console.log('finished seeding'))
   .catch(err => console.log(err));
