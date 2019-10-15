@@ -15,16 +15,16 @@ const AuthFooter = () => {
     <>
       <AuthFooterContainer>
         <nav className="footer-menu">
-          <Link to="/" className="link">
+          <Link to="/wines/all/1" className="link">
             <FontAwesomeIcon
               className={`link__icon${
-                /\/\d$/.test(location.pathname) ? ' active' : ''
+                location.pathname.startsWith('/wines/all') ? ' active' : ''
               }`}
               icon={faHome}
             />
             <span
               className={`link__text${
-                /\/\d$/.test(location.pathname) ? ' active' : ''
+                location.pathname.startsWith('/wines/all') ? ' active' : ''
               }`}
             >
               Home
@@ -47,16 +47,16 @@ const AuthFooter = () => {
             </span>
           </Link>
 
-          <Link to="/wines/view" className="link">
+          <Link to="/wines/mine" className="link">
             <FontAwesomeIcon
               className={`link__icon${
-                location.pathname === '/wines/view' ? ' active' : ''
+                location.pathname === '/wines/mine' ? ' active' : ''
               }`}
               icon={faWineGlassAlt}
             />
             <span
               className={`link__text${
-                location.pathname === '/wines/view' ? ' active' : ''
+                location.pathname === '/wines/mine' ? ' active' : ''
               }`}
             >
               My Wines
@@ -69,14 +69,18 @@ const AuthFooter = () => {
 };
 
 const AuthFooterContainer = styled.footer`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  height: 70px;
+  width: 100vw;
+  background: var(--verylightgrey);
+  border-top: 1px solid var(--lightgrey);
+
   .footer-menu {
-    position: fixed;
-    bottom: 0;
-    left: 0;
     height: 70px;
-    width: 100vw;
-    background: var(--verylightgrey);
-    border-top: 1px solid var(--lightgrey);
+    max-width: 1080px;
+    margin: 0 auto;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -116,12 +120,6 @@ const AuthFooterContainer = styled.footer`
     color: var(--purple);
     opacity: 1;
     font-weight: bold;
-  }
-
-  @media screen and (min-width: 600px) {
-    .link {
-      flex-grow: 1;
-    }
   }
 `;
 

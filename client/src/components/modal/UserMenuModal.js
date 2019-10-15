@@ -105,7 +105,7 @@ const UserMenuModal = ({
                         <p className="menu__email">{user.email}</p>
                       </Link>
                       <Link
-                        to="/account"
+                        to="/user/account"
                         className="menu__link"
                         onClick={() => setShowUserMenuModal(false)}
                       >

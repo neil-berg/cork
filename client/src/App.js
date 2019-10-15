@@ -49,18 +49,18 @@ const App = () => {
         <Header />
         <Switch>
           <Route exact path="/">
-            <Redirect to="/1" />
+            <Redirect to="/wines/all/1" />
           </Route>
-          <Route exact path="/:page">
+          <Route exact path="/wines/all/:page">
             <Home />
           </Route>
           <Route path="/wines/add">
             <AddWine />
           </Route>
-          <Route path="/wines/view">
+          <Route path="/wines/mine">
             <MyWines />
           </Route>
-          <Route path="/account">
+          <Route path="/user/account">
             <UserAccount />
           </Route>
           <Route>

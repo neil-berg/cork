@@ -45,14 +45,18 @@ const NoAuthFooter = () => {
 };
 
 const NoAuthFooterContainer = styled.footer`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  height: 70px;
+  width: 100vw;
+  background: var(--verylightgrey);
+  border-top: 1px solid var(--lightgrey);
+
   .footer-menu {
-    position: fixed;
-    bottom: 0;
-    left: 0;
     height: 70px;
-    width: 100vw;
-    background: var(--verylightgrey);
-    border-top: 1px solid var(--lightgrey);
+    max-width: 1080px;
+    margin: 0 auto;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -92,12 +96,6 @@ const NoAuthFooterContainer = styled.footer`
     color: var(--purple);
     opacity: 1;
     font-weight: bold;
-  }
-
-  @media screen and (min-width: 600px) {
-    .link {
-      flex-grow: 1;
-    }
   }
 `;
 

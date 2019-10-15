@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 import { useRouteMatch } from 'react-router-dom';
+import { animated, useSpring } from 'react-spring';
 
 import Loading from '../components/loading/Loading';
 import Error from '../components/error/Error';
@@ -19,6 +20,11 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [wines, setWines] = useState([]);
+
+  // Fade-in wine list when loaded
+  const fadeAnimation = useSpring({
+    opacity: wines.length > 0 ? 1 : 0
+  });
 
   useEffect(() => {
     // Fetch latest wines in the DB and if a
@@ -57,9 +63,9 @@ const Home = () => {
 
           // Append new boolean prop 'likedByUser' if wine id's match
           wines.map(wine =>
-            likedWines.includes(wine._id)
-              ? Object.assign(wine, { likedByUser: true })
-              : Object.assign(wine, { likedByUser: false })
+            Object.assign(wine, {
+              likedByUser: likedWines.includes(wine._id) ? true : false
+            })
           );
         }
 
@@ -87,23 +93,25 @@ const Home = () => {
   }
 
   return (
-    <div>
+    <animated.div style={fadeAnimation}>
       <WineList>{renderWines()}</WineList>
       <Pagination page={match.params.page} total={total} />
-    </div>
+    </animated.div>
   );
 };
 
 const WineList = styled.ul`
+  max-width: 1080px;
+  margin: 1rem auto 0 auto;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   justify-items: center;
   justify-content: center;
-  margin-top: 1rem;
   // margin-bottom: 100px;
 
   @media screen and (min-width: 450px) {
     grid-gap: 1rem;
+    padding: 0 1rem;
   }
 `;
 

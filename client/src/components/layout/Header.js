@@ -40,32 +40,34 @@ const Header = () => {
   return (
     <>
       <HeaderContainer>
-        <Link to="/">
-          <h1>Cork</h1>
-        </Link>
+        <div className="link-wrapper">
+          <Link to="/">
+            <h1>Cork</h1>
+          </Link>
 
-        {avatarExists ? (
-          <img
-            className="avatar-image"
-            src={`${process.env.REACT_APP_API_URL}/api/users/${user._id}/avatar`}
-            alt="user avatar"
-            onClick={() => {
-              user.isLoggedIn
-                ? setShowUserMenuModal(!showUserMenuModal)
-                : setShowAuthModal(!showAuthModal);
-            }}
-          />
-        ) : (
-          <FontAwesomeIcon
-            className="header__icon"
-            icon={faUserCircle}
-            onClick={() => {
-              user.isLoggedIn
-                ? setShowUserMenuModal(!showUserMenuModal)
-                : setShowAuthModal(!showAuthModal);
-            }}
-          />
-        )}
+          {avatarExists ? (
+            <img
+              className="avatar-image"
+              src={`${process.env.REACT_APP_API_URL}/api/users/${user._id}/avatar`}
+              alt="user avatar"
+              onClick={() => {
+                user.isLoggedIn
+                  ? setShowUserMenuModal(!showUserMenuModal)
+                  : setShowAuthModal(!showAuthModal);
+              }}
+            />
+          ) : (
+            <FontAwesomeIcon
+              className="header__icon"
+              icon={faUserCircle}
+              onClick={() => {
+                user.isLoggedIn
+                  ? setShowUserMenuModal(!showUserMenuModal)
+                  : setShowAuthModal(!showAuthModal);
+              }}
+            />
+          )}
+        </div>
       </HeaderContainer>
       <Portal>
         <UserMenuModal
@@ -84,11 +86,17 @@ const Header = () => {
 const HeaderContainer = styled.header`
   position: relative;
   height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   background: linear-gradient(135deg, var(--purple), var(--maroon));
-  padding: 0 1rem;
+
+  .link-wrapper {
+    height: 60px;
+    padding: 0 1rem;
+    max-width: 1080px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 
   h1 {
     color: var(--white);
