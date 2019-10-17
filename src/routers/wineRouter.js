@@ -106,15 +106,64 @@ router.get('/api/wines/mine', auth, async (req, res) => {
     sortOptions[field] = direction === 'asc' ? 1 : -1;
   }
 
+  const allOptions = {
+    limit: parseInt(req.query.limit),
+    skip: parseInt(req.query.skip),
+    sort: sortOptions
+  };
+
   try {
-    const wines = await Wine.find({ owner: req.user._id }, null, {
-      sort: sortOptions
-    }).populate('owner', 'username');
+    // Determine total number of wines added and liked by this user
+    const totalCount = await Wine.find({
+      owner: req.user._id
+    }).countDocuments();
+
+    const wines = await Wine.find(
+      { owner: req.user._id },
+      null,
+      allOptions
+    ).populate('owner', 'username');
 
     if (!wines) {
       return res.status(404).send();
     }
-    res.send(wines);
+    res.send({ wines, totalCount });
+  } catch (error) {
+    res.status(500).send();
+  }
+});
+
+// GET /api/wines/mine/liked
+//
+// Read all liked wines by a user
+router.get('/api/wines/mine/liked', auth, async (req, res) => {
+  const sortOptions = {};
+  if (req.query.sortBy) {
+    const [field, direction] = req.query.sortBy.split(':');
+    sortOptions[field] = direction === 'asc' ? 1 : -1;
+  }
+
+  const allOptions = {
+    limit: parseInt(req.query.limit),
+    skip: parseInt(req.query.skip),
+    sort: sortOptions
+  };
+
+  try {
+    // Determine total number of liked wines by the user
+    const totalCount = req.user.likedWines.length;
+
+    const wines = await Wine.find(
+      { _id: req.user.likedWines },
+      null,
+      null
+    ).populate('owner', 'username');
+
+    if (!wines) {
+      return res.status(404).send();
+    }
+
+    res.send({ wines, totalCount });
   } catch (error) {
     res.status(500).send();
   }

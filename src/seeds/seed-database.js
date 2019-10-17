@@ -41,7 +41,7 @@ const seedDatabase = async (numUsers = 3, numWines = 5) => {
         owner: user._id,
         name: `${faker.commerce.productName()}-${totalCount}`,
         type: 'red',
-        rating: Math.floor(Math.random() * 6),
+        rating: Math.floor(Math.random() * 5) + 1,
         likes: Math.floor(Math.random() * 100000),
         review: faker.lorem.sentence()
       };

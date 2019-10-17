@@ -57,7 +57,10 @@ const App = () => {
           <Route path="/wines/add">
             <AddWine />
           </Route>
-          <Route path="/wines/mine">
+          <Route exact path="/wines/mine/:page">
+            <MyWines />
+          </Route>
+          <Route exact path="/wines/mine/liked/:page">
             <MyWines />
           </Route>
           <Route path="/user/account">

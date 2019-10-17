@@ -47,16 +47,16 @@ const AuthFooter = () => {
             </span>
           </Link>
 
-          <Link to="/wines/mine" className="link">
+          <Link to="/wines/mine/1" className="link">
             <FontAwesomeIcon
               className={`link__icon${
-                location.pathname === '/wines/mine' ? ' active' : ''
+                location.pathname === '/wines/mine/1' ? ' active' : ''
               }`}
               icon={faWineGlassAlt}
             />
             <span
               className={`link__text${
-                location.pathname === '/wines/mine' ? ' active' : ''
+                location.pathname === '/wines/mine/1' ? ' active' : ''
               }`}
             >
               My Wines

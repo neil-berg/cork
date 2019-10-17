@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styled, { keyframes } from 'styled-components';
-import { useRouteMatch } from 'react-router-dom';
+import { Link, useRouteMatch } from 'react-router-dom';
 import { animated, useSpring } from 'react-spring';
 
 import Loading from '../components/loading/Loading';
@@ -12,10 +12,10 @@ import { ReactComponent as WineBottles } from '../assets/cheers.svg';
 
 const MyWines = () => {
   // Fetch latest 20 wines in the DB
-  const [total, setTotal] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [wines, setWines] = useState([]);
+  const [total, setTotal] = useState(null);
+  const [wines, setWines] = useState(0);
 
   const match = useRouteMatch();
 
@@ -27,11 +27,16 @@ const MyWines = () => {
   useEffect(() => {
     const token = localStorage.getItem('cork-token');
     const fetchAllWines = async () => {
-      // setLoading(false);
-      // setError(false);
+      // Determine API endpoint based on URL
+      const url = match.url.includes('liked')
+        ? '/api/wines/mine/liked'
+        : '/api/wines/mine';
       try {
+        setTotal(null);
         setLoading(true);
-        const { data: wines } = await axios.get('/api/wines/mine', {
+        const {
+          data: { wines, totalCount }
+        } = await axios.get(url, {
           params: {
             limit: 20,
             skip: (match.params.page - 1) * 20,
@@ -42,21 +47,16 @@ const MyWines = () => {
           }
         });
 
-        const { data } = await axios.get('/api/users/me', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
+        // If no total, set total number of wines
+        if (!total) {
+          setTotal(totalCount);
+        }
 
-        // Append new boolean prop 'likedByUser' if wine id's match
-        const likedWines = data.likedWines;
-        wines.map(wine =>
-          likedWines.includes(wine._id)
-            ? Object.assign(wine, { likedByUser: true })
-            : Object.assign(wine, { likedByUser: false })
-        );
+        // Color the hearts if fetching liked wines
+        if (match.url.includes('liked')) {
+          wines.map(wine => Object.assign(wine, { likedByUser: true }));
+        }
 
-        setTotal(wines.length);
         setWines(wines);
         setLoading(false);
       } catch (error) {
@@ -65,25 +65,7 @@ const MyWines = () => {
       }
     };
     fetchAllWines();
-  }, []);
-
-  // // Fetch likedWines
-  useEffect(() => {
-    const token = localStorage.getItem('cork-token');
-    const fetchLikedWines = async () => {
-      try {
-        const data = await axios.get('/api/users/me/likes', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-        //console.log(data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchLikedWines();
-  }, []);
+  }, [match.url, match.params.page]);
 
   const renderWines = () => {
     return wines.map(wine => <WineCard key={wine._id} wine={wine} />);
@@ -93,7 +75,7 @@ const MyWines = () => {
     return (
       <EmptyContainer>
         <WineBottles className="icon" />
-        <p>Add some wines!</p>
+        <p>Add and like some wines!</p>
       </EmptyContainer>
     );
   };
@@ -108,6 +90,20 @@ const MyWines = () => {
 
   return wines.length > 0 ? (
     <animated.div style={fadeAnimation}>
+      <Toggler>
+        <Link
+          className={match.url.includes('liked') ? 'link' : 'active-link'}
+          to="/wines/mine/1"
+        >
+          Added Wines
+        </Link>
+        <Link
+          className={match.url.includes('liked') ? 'active-link' : 'link'}
+          to="/wines/mine/liked/1"
+        >
+          Liked Wines
+        </Link>
+      </Toggler>
       <WineList>{renderWines()}</WineList>
       <Pagination page={match.params.page} total={total} />
     </animated.div>
@@ -116,9 +112,33 @@ const MyWines = () => {
   );
 };
 
+const Toggler = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 0;
+
+  .link,
+  .active-link {
+    padding: 0.5rem 1rem;
+    margin: 0 1rem;
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: border 0.2s ease;
+  }
+
+  .link {
+    border-bottom: 2px transparent solid;
+  }
+
+  .active-link {
+    border-bottom: 2px var(--maroon) solid;
+  }
+`;
+
 const WineList = styled.div`
   max-width: 1080px;
-  margin: 1rem auto 0 auto;
+  margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   justify-items: center;
