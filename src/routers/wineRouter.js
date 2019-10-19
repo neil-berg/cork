@@ -4,7 +4,6 @@ const sharp = require('sharp');
 const auth = require('../middleware/auth');
 const upload = require('../middleware/upload');
 const Wine = require('../models/wine');
-const User = require('../models/user');
 
 const router = new express.Router();
 

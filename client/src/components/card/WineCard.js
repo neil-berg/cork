@@ -1,20 +1,23 @@
 import React, { useState, useContext, useEffect } from 'react';
 import styled from 'styled-components';
-import { animated, useSpring } from 'react-spring';
+import { animated, useSpring, useTransition } from 'react-spring';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart as emptyHeart } from '@fortawesome/free-regular-svg-icons';
 import {
   faHeart as fullHeart,
-  faStar
+  faStar,
+  faPlus
 } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import moment from 'moment';
 
 import UserContext from '../../context/UserContext';
+import DetailsOverlay from './DetailsOverlay';
 
 const WineCard = ({ wine }) => {
   const [user, setUser] = useContext(UserContext);
 
+  const [showDetails, setShowDetails] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [likes, setLikes] = useState(null);
   const [isLikedByUser, setIsLikedByUser] = useState(null);
@@ -70,7 +73,7 @@ const WineCard = ({ wine }) => {
   };
 
   return (
-    <Card>
+    <Card showDetails={showDetails}>
       <div className="header">
         <span>{wine.owner.username}</span>
         <span>{moment(wine.createdAt).fromNow()}</span>
@@ -79,6 +82,13 @@ const WineCard = ({ wine }) => {
         src={process.env.REACT_APP_API_URL + `/api/wines/${wine._id}/image`}
         alt="wine bottle"
       />
+      <button
+        className="details-button"
+        onClick={() => setShowDetails(!showDetails)}
+      >
+        <FontAwesomeIcon className="details-icon" icon={faPlus} />
+      </button>
+      <DetailsOverlay showDetails={showDetails} wine={wine} />
       <div className="footer">
         <div className="icons-container">
           <div className="likes-container">
@@ -118,6 +128,7 @@ const WineCard = ({ wine }) => {
 const Card = styled.div`
   margin: 2rem 0;
   border-bottom: 1px var(--lightgrey) solid;
+  position: relative;
 
   .header {
     font-weight: 700;
@@ -126,6 +137,24 @@ const Card = styled.div`
     justify-content: space-between;
     align-itemms: center;
     border-radius: 5px 5px 0 0;
+  }
+
+  .details-button {
+    position: absolute;
+    top: 2.25rem;
+    left: 0.5rem;
+    background: transparent;
+    border: 0;
+    outline: 0;
+    cursor: pointer;
+    transform: ${props => (props.showDetails ? 'rotate(45deg)' : '')};
+    transition: all 0.3s ease;
+    z-index: 2;
+  }
+
+  .details-icon {
+    color: var(--lightpurple);
+    font-size: 1.5rem;
   }
 
   img {

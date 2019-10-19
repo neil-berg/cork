@@ -9,6 +9,9 @@ const Wine = require('../models/wine');
 const seedDatabase = async (numUsers = 3, numWines = 5) => {
   let totalCount = 0;
   let userCount = 0;
+
+  const winetypes = ['red', 'white', 'rosé', 'orange', 'dessert', 'sparkling'];
+
   while (userCount < numUsers) {
     // Create a sample user
     const sampleUser = {
@@ -40,8 +43,12 @@ const seedDatabase = async (numUsers = 3, numWines = 5) => {
       const sampleWine = {
         owner: user._id,
         name: `${faker.commerce.productName()}-${totalCount}`,
-        type: 'red',
+        type: winetypes[Math.floor(Math.random() * winetypes.length)],
         rating: Math.floor(Math.random() * 5) + 1,
+        vineyard: faker.company.companyName(),
+        varietal: faker.random.word(),
+        country: faker.address.country(),
+        region: faker.address.state(),
         likes: Math.floor(Math.random() * 100000),
         review: faker.lorem.sentence()
       };

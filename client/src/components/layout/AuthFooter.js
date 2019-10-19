@@ -76,6 +76,7 @@ const AuthFooterContainer = styled.footer`
   width: 100vw;
   background: var(--verylightgrey);
   border-top: 1px solid var(--lightgrey);
+  z-index: 3;
 
   .footer-menu {
     height: 70px;

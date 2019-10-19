@@ -20,7 +20,7 @@ const AddWineForm = () => {
     vineyard: '',
     varietal: '',
     country: '',
-    origin: '',
+    region: '',
     review: 'Enter review here...'
   });
 

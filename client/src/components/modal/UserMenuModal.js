@@ -149,6 +149,7 @@ const UserMenuContainer = styled.div`
     width: 100vw;
     background: transparent;
     overflow: hidden;
+    z-index: 3;
   }
 
   .menu {

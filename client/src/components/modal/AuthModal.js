@@ -332,6 +332,7 @@ const Container = styled.div`
     align-items: center;
     background-color: var(--purplegrey);
     overflow: hidden;
+    z-index: 3;
   }
   .card {
     position: relative;

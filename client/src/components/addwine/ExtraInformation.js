@@ -47,13 +47,13 @@ const ExtraInformation = ({ wineInfo, setWineInfo }) => {
           title="Must contain only letters, spaces, or apostrophes and be at least 3 characters long."
           onChange={e => setWineInfo({ ...wineInfo, country: e.target.value })}
         />
-        <label htmlFor="origin">Origin</label>
+        <label htmlFor="region">Region</label>
         <input
           type="text"
-          name="origin"
-          id="origin"
-          placeholder="Enter origin of country wine is made in"
-          value={wineInfo['origin']}
+          name="region"
+          id="region"
+          placeholder="Enter region of country wine is made in"
+          value={wineInfo['region']}
           pattern="^[a-zA-Z'\s]{3,}"
           title="Must contain only letters, spaces, or apostrophes and be at least 3 characters long."
           onChange={e => setWineInfo({ ...wineInfo, origin: e.target.value })}
