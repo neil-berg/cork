@@ -79,8 +79,7 @@ const WineCard = ({ wine }) => {
         <span>{moment(wine.createdAt).fromNow()}</span>
       </div>
       <img
-        // src={process.env.REACT_APP_API_URL + `/api/wines/${wine._id}/image`}
-        src={`https://cork.herokuapp.com/api/wines/${wine._id}/image`}
+        src={`${process.env.REACT_APP_API_URL}/api/wines/${wine._id}/image`}
         alt="wine bottle"
       />
       <button
